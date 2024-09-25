@@ -1,0 +1,14 @@
+<header class="header-container">
+    <div class="logo-img">
+        <img class="logo" src="assets/logo.png" alt="logo-img">
+    </div>
+    
+    <nav>
+        <ul class="navigation-list">
+            <li><a [ngClass]="activeLink==='/' ? 'active-nav' : 'disable-nav'" [routerLink]="['']">Main</a></li>
+            <li><a [ngClass]="activeLink==='/catalog' ? 'active-nav' : 'disable-nav'" [routerLink]="['catalog']">Сatalog</a></li>
+            <li><a [ngClass]="activeLink==='/new' ? 'active-nav' : 'disable-nav'" [routerLink]="['new']">New items</a></li>
+            <li><a [ngClass]="activeLink==='/contact' ? 'active-nav' : 'disable-nav'">Contact</a></li>
+        </ul>
+    </nav>
+</header>
