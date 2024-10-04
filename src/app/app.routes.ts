@@ -7,6 +7,8 @@ import { ProfileComponent } from './profile/component/profile.component';
 import { SigninComponent } from './signin/component/signin.component';
 import { SignupComponent } from './signup/component/signup.component';
 import { BasketComponent } from './basket/component/basket.component';
+import { profileGuard } from './profile/guard/profile.guard';
+import { loginGuard } from './signin/guard/login.guard';
 
 export const routes: Routes = [
     {
@@ -31,21 +33,25 @@ export const routes: Routes = [
 
     {
         path:'profile',
-        component:ProfileComponent
+        component:ProfileComponent,
+        canActivate:[profileGuard]
     },
 
     {
         path:'signin',
-        component:SigninComponent
+        component:SigninComponent,
+        canActivate:[loginGuard]
     },
 
     {
         path:'signup',
-        component:SignupComponent
+        component:SignupComponent,
+        canActivate:[loginGuard]
     },
 
     {
         path:'basket',
-        component:BasketComponent
+        component:BasketComponent,
+        canActivate:[profileGuard]
     }
 ];

@@ -61,6 +61,7 @@ export class SigninComponent implements OnInit {
     this.buttonLock = true;
     localStorage.setItem('token','a9sd932lDS032dfjreisadfi20002cdddsDDssd')
     this.loginForm.controls['password'].reset();
+    this.router.navigate(['/'])
     setTimeout(() => {
       this.buttonLock = false;
     }, 2000);
