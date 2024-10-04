@@ -1,0 +1,27 @@
+<section class="main-section">
+
+    <div class="popular-listing">
+
+        <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+            <div *ngFor="let slide of slides" ngxSlickItem class="slide">
+                <img src="{{slide.img}}" alt="sneaker" class ="carousel-img">
+            </div>
+        </ngx-slick-carousel>
+
+    </div>
+
+    <div class="new-model-advertising">
+
+        <div class="first-ad">
+            <img src="assets\travis-scott-jordan-1-low-medium-olive.jpg" alt="travis scott air jordan 1 low">
+            <h4>The Air Jordan 1 Low “Medium Olive”</h4>
+        </div>
+
+        <div class="second-ad">
+            <img src="assets\nike-what-the-duck-dunk.jpg" alt="'What The Duck' Nike Dunk">
+            <h4>“What The Duck” Nike Dunk</h4>
+        </div>
+
+    </div>
+    
+</section>  

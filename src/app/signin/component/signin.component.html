@@ -1,0 +1,24 @@
+<div class="login-form">
+    <h2>Sign in</h2>
+    <form [formGroup]="loginForm">
+        <mat-form-field class="input-block">
+            <mat-label>Email:</mat-label>
+            <input type="email" matInput formControlName="login" placeholder="email@example.com">
+        </mat-form-field>
+        @if (loginForm.controls['login'].invalid && loginForm.controls['login'].touched && buttonClicked) {
+            <div class="alert"> Incorrect email</div>
+        }
+        <mat-form-field class="input-block">
+            <mat-label>Password:</mat-label>
+            <input type="password" matInput formControlName="password">   
+        </mat-form-field>
+        @if (loginForm.controls['password'].invalid && loginForm.controls['password'].touched && buttonClicked) {
+            <div class="alert"> Required </div>
+        }
+        @if ((errorPostSubject$|async)) {
+           <div class="alert"> Incorrect email or password</div>
+        }
+        <button type="button" class="form-button" (click)="login()" [disabled]="loginForm.invalid||buttonLock">Sign in</button>
+        <span><a class="register" [routerLink]="['/signup']">Sign up</a> if you don't have an account yet</span>
+    </form>
+  </div>

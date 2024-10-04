@@ -1,0 +1,13 @@
+<div class="catalog-listing">
+    <div class="sneakers-card" *ngFor="let list of listing; let i = index">
+        @if(isFavorite.getValue()[i]){
+            <button class="favorites" (click)="changeFavorite(i)"><mat-icon class="icon">favorite</mat-icon></button>   
+        }@else{
+            <button class="favorites" (click)="changeFavorite(i)"><mat-icon class="icon">favorite_border</mat-icon></button>
+        }
+        
+        <img [src]="list.image" [alt]="list.name">
+        <p>{{list.name}}</p>
+        <p>{{list.price}}$</p>
+    </div>
+</div>

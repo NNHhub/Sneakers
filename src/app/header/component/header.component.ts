@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -15,5 +16,17 @@ export class HeaderComponent {
     this.router.events.subscribe(() => {
       this.activeLink = this.router.url;
     });
+  }
+
+  isAutorized(): Observable<boolean> {
+    return of(localStorage.getItem('token')).pipe(
+      map(token => {
+        if (token) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+    );
   }
 }
