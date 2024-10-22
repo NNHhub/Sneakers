@@ -3,19 +3,23 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
+interface logInterface{
+  token:string
+}
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
     RouterModule,
     MatInputModule,
   ],
+  providers:[HttpClient],
   templateUrl: './signin.component.html',
   styleUrl: './signin.component.scss'
 })
@@ -30,7 +34,8 @@ export class SigninComponent implements OnInit {
 
   constructor(
     public fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private http: HttpClient,
   ) {}
   
   ngOnInit() {
@@ -59,9 +64,18 @@ export class SigninComponent implements OnInit {
 
   login() {
     this.buttonLock = true;
-    localStorage.setItem('token','a9sd932lDS032dfjreisadfi20002cdddsDDssd')
+    this.http.post(`http://localhost:3000/api/login`, { email:this.loginForm.controls['login'].value, password:this.loginForm.controls['password'].value }).subscribe({
+      next:(request)=>{
+        console.log('Autorizated seccesseful');
+        localStorage.setItem('token',(request as logInterface).token);
+        this.router.navigate(['/'])
+      },
+      error:(error)=>{
+        console.log('Autorization error',error)
+      }
+    })
     this.loginForm.controls['password'].reset();
-    this.router.navigate(['/'])
+    
     setTimeout(() => {
       this.buttonLock = false;
     }, 2000);

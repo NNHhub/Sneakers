@@ -4,7 +4,7 @@
     height: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap:20px;
+    gap:10px;
     padding: 2% 0 2% 15%;
 }
 
@@ -12,7 +12,6 @@
     position: relative;
     text-align: center;
     width: 200px;
-    height: 220px;
     border: 3px solid black;
     border-radius: 5px;
     overflow: hidden;

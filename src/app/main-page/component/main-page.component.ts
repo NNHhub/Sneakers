@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 
@@ -9,10 +10,15 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
     SlickCarouselModule,
     CommonModule
   ],
+  providers:[HttpClient],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss'
 })
 export class MainPageComponent {
+  constructor(){
+
+  }
+  
   slides = [
     {img: "assets/nike-what-the-duck-dunk.jpg"},
     {img: "assets/travis-scott-jordan-1-low-medium-olive.jpg"},

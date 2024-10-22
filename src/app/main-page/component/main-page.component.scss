@@ -27,6 +27,7 @@
     gap:40px;
     grid-template-columns: 1fr 1fr;
     margin-top: 50px;
+    padding: 10px;
 }
 
 .first-ad{
@@ -51,12 +52,36 @@
     height: 100%;
 }
 
-@media (max-width:600px) {
+@media (max-width:800px) {
+
+    .popular-listing{
+        width: 600px;
+        height:500px;
+    }
+
+    .carousel-img{
+        width: 600px;
+        height:500px;
+        border-radius: 20px;
+    }
+
     .new-model-advertising{
         grid-template-areas:
         "first"
         "second";
         grid-template-columns: 1fr;
+    } 
+}
+
+@media (max-width: 480px) {
+    .popular-listing{
+        width: 300px;
+        height:300px;
     }
-    
+
+    .carousel-img{
+        width: 300px;
+        height:300px;
+        border-radius: 10px;
+    }
 }

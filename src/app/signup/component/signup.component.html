@@ -1,1 +1,33 @@
-<p>signup works!</p>
+<div class="login-form">
+    <h2>Sign up</h2>
+    <form [formGroup]="regForm">
+        <mat-form-field class="input-block">
+            <mat-label>First name:</mat-label>
+            <input type="text" matInput formControlName="firstName" >
+        </mat-form-field>
+
+        <mat-form-field class="input-block">
+            <mat-label>Last name:</mat-label>
+            <input type="text" matInput formControlName="lastName">
+        </mat-form-field>
+
+        <mat-form-field class="input-block">
+            <mat-label>Email:</mat-label>
+            <input type="email" matInput formControlName="email" placeholder="email@example.com">
+        </mat-form-field>
+        @if (regForm.controls['email'].invalid && regForm.controls['email'].touched && buttonClicked) {
+            <div class="alert"> Incorrect email</div>
+        }
+        <mat-form-field class="input-block">
+            <mat-label>Password:</mat-label>
+            <input type="password" matInput formControlName="password">   
+        </mat-form-field>
+        @if (regForm.controls['password'].invalid && regForm.controls['password'].touched && buttonClicked) {
+            <div class="alert"> Required </div>
+        }
+        @if ((errorPostSubject$|async)) {
+           <div class="alert"> Incorrect email or password</div>
+        }
+        <button type="button" class="form-button" (click)="register()" [disabled]="regForm.invalid||buttonLock">Sign up</button>
+    </form>
+</div>

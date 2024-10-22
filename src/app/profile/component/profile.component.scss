@@ -1,12 +1,44 @@
+section{
+    display: flex;
+    position: relative;
+    margin: 0 auto;
+    width: 500px;
+    height: 500px;
+    border: 3px solid #d3c687;
+    border-radius: 10px;
+}
+
+.buttons{
+    position: absolute;
+    bottom: 30px;
+    margin-left: 25%;
+}
 .logout{
     position: relative;
     width: 100px;
     padding: 10px;
-    margin:0 auto;
+    margin-right: 30px;
     font-size: 20px;
     color:white;
     background: #d3c687;
     border-color:#d3c687;
     border-radius: 4px 4px 4px 4px;
     cursor: pointer;
+}
+
+.delete{
+    position: relative;
+    padding: 10px;
+    margin:0 auto;
+    font-size: 20px;
+    color:rgb(250, 10, 10);
+    background: #d3c687;
+    border-color:#d3c687;
+    border-radius: 4px 4px 4px 4px;
+    cursor: pointer;
+}
+
+.snackbar-error {
+    background-color: red;
+    color: white;
 }

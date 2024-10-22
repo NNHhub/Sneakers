@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -14,15 +15,10 @@ import { BehaviorSubject, Observable } from 'rxjs';
   styleUrl: './catalog.component.scss'
 })
 export class CatalogComponent {
-  listing = [
-    {name:'Nike "What the Duck" dunk', price:500, image:'assets/nike-what-the-duck-dunk.jpg'},
-    {name:'Nike Travis Scott Jordan 1 low', price:600, image:'assets/travis-scott-jordan-1-low-medium-olive.jpg'}
-  ]
-  isFavorite = new BehaviorSubject<boolean[]>([]);
-
-  constructor(){
-    this.changeFavorite();
+  sneakers = new BehaviorSubject<string[]>([]);
+  constructor(private http:HttpClient){
   }
+  isFavorite = new BehaviorSubject<boolean[]>([]);
 
   changeFavorite(index?:number){
     let arr:boolean[] = [];
@@ -32,7 +28,7 @@ export class CatalogComponent {
       arr[index] = arr[index] ? false : true;
       this.isFavorite.next(arr);
     } else {
-      this.listing.forEach(()=>{
+      this.sneakers.getValue().forEach(()=>{
         arr.push(false);
       })
       this.isFavorite.next(arr);
