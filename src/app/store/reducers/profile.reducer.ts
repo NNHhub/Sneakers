@@ -16,5 +16,8 @@ export const profileReducer = createReducer(
     ...state,
     profile
   })),
-
+  on(profileActions.changeProfile, (state,{profile})=> ({
+    ...state,
+    profile:{...profile,role:state.profile?.role as string}
+  })),
 )

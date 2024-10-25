@@ -1,5 +1,6 @@
 export interface IProfile{
-    first_Name: string,
-    last_Name: string,
-    role: string
+    first_name: string,
+    last_name: string,
+    role: string,
+    phone:string
 }

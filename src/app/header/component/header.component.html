@@ -9,14 +9,12 @@
             <li><a [ngClass]="activeLink==='/catalog' ? 'active-nav' : 'disable-nav'" [routerLink]="['catalog']">Сatalog</a></li>
             <li><a [ngClass]="activeLink==='/contact' ? 'active-nav' : 'disable-nav'" [routerLink]="['contact']">Contact</a></li>
             @if(isAutorized()|async){
-                <li><a [ngClass]="activeLink==='/profile' ? 'active-nav' : 'disable-nav'" [routerLink]="['profile']">Profile</a></li>
-                
+                <li><a [ngClass]="activeLink==='/profile' ? 'active-nav' : 'disable-nav'" [routerLink]="['profile']">Profile</a></li>   
+                <a class="basket" [routerLink]="['/basket']"><mat-icon>shopping_cart</mat-icon></a>
             } @else {
                 <li><a [ngClass]="activeLink==='/signin' ? 'active-nav' : 'disable-nav'" [routerLink]="['signin']">Signin</a></li>
             }
-            @if(isAutorized()|async){
-                <a class="basket" [routerLink]="['/basket']"><mat-icon>shopping_cart</mat-icon></a>
-            }
+            <li *ngIf="(profile|async)?.role ==='admin'"><a [ngClass]="activeLink==='/admin' ? 'active-nav' : 'disable-nav'" [routerLink]="['admin']">Admin</a></li>
         </ul>
     </nav>
 </header>

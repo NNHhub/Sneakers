@@ -5,6 +5,8 @@ import { BehaviorSubject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Store } from '@ngrx/store';
+import { getProfile } from 'app/store/actions/profile.action';
 
 interface logInterface{
   token:string
@@ -36,6 +38,7 @@ export class SigninComponent implements OnInit {
     public fb: FormBuilder,
     private router: Router,
     private http: HttpClient,
+    private store: Store
   ) {}
   
   ngOnInit() {
@@ -68,6 +71,7 @@ export class SigninComponent implements OnInit {
       next:(request)=>{
         console.log('Autorizated seccesseful');
         localStorage.setItem('token',(request as logInterface).token);
+        this.store.dispatch(getProfile());
         this.router.navigate(['/'])
       },
       error:(error)=>{
