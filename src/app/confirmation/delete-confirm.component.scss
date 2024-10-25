@@ -1,0 +1,22 @@
+.confirm-section{
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+    align-items: center;
+    position: relative;
+    border: 2px solid #eee6e6;
+    border-radius: 5px;
+    background-color: #ebe3e3;
+    padding: 20px;   
+}
+.input-block {
+    width: 100%;
+}
+.confirm-button{
+    padding: 10px 15px 10px 15px;
+    border: 1px solid #857b7b;
+    margin:5px;
+}
+.delete{
+    color:red !important;
+}

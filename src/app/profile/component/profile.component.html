@@ -1,2 +1,74 @@
-<p>profile works!</p>
-<button class="logout" (click)="logout()">Logout</button>
+<section>
+    <h1>Profile</h1>
+    <div class="role" *ngIf="(profile$|async)?.role=='admin'">
+        Manager
+    </div>
+
+    <form  class="form-block" [formGroup]="profileForm" >
+
+        <div class="profile-data" *ngIf="!isEditingFirstName">
+            <h2>First name:</h2> 
+            <p>{{ profileForm.controls['firstName'].value }}  <button class="profile-change-button" (click)="editFirstName()"><mat-icon>edit</mat-icon></button></p>
+        </div>
+
+        <div *ngIf="isEditingFirstName">
+            <div class="input-block">
+                <label for="first-name">First name:</label>
+                <div>
+                    <input id="first-name" type="text" formControlName="firstName" >
+                    <button class="profile-change-button" (click)="saveFirstName()" [disabled]="profileForm.controls['firstName'].invalid"><mat-icon>save</mat-icon></button>
+                </div>
+                @if(profileForm.controls['firstName'].invalid){
+                    <div class="alert">
+                        Required
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="profile-data" *ngIf="!isEditingLastName">
+            <h2>Last name:</h2> 
+            <p>{{ profileForm.controls['lastName'].value }}  <button class="profile-change-button" (click)="editLastName()"><mat-icon>edit</mat-icon></button></p>
+        </div>
+
+        <div *ngIf="isEditingLastName">
+            <div class="input-block">
+                <label for="last-name">Last name:</label>
+                <div>
+                    <input id="last-name" type="text" formControlName="lastName" >
+                    <button class="profile-change-button" (click)="saveLastName()" [disabled]="profileForm.controls['lastName'].invalid"><mat-icon>save</mat-icon></button>
+                </div>
+                @if(profileForm.controls['lastName'].invalid){
+                    <div class="alert">
+                        Required
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="profile-data" *ngIf="!isEditingPhone">
+            <h2>Phone:</h2> 
+            <p>{{ profileForm.controls['phone'].value }}  <button class="profile-change-button" (click)="editPhone()"><mat-icon>edit</mat-icon></button></p>
+        </div>
+
+        <div *ngIf="isEditingPhone">
+            <div class="input-block">
+                <label for="phone">Phone:</label>
+                <div>
+                    <input id="phone" formControlName="phone" [mask]="'0 (000) 000-0000'" >
+                    <button class="profile-change-button" (click)="savePhone()" [disabled]="profileForm.controls['phone'].invalid"><mat-icon>save</mat-icon></button>
+                </div>
+                @if(profileForm.controls['phone'].invalid){
+                    <div class="alert">
+                        Required
+                    </div>
+                }
+            </div>
+        </div>
+    </form>
+
+    <div class="buttons">
+        <button class="logout" (click)="logout()">Logout</button>
+        <button *ngIf="(profile$|async)?.role!=='admin'" class="delete" (click)="deleteUser()">Delete user</button>
+    </div>
+</section>

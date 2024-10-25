@@ -24,6 +24,12 @@ a{
 nav{
     flex:1;
 }
+
+a{
+    text-decoration: none;
+    color:inherit;
+}
+
 .navigation-list {
     display: flex;
     margin-top: 20px;
@@ -54,12 +60,23 @@ nav{
 .navigation-list li:hover{
     cursor: pointer;
 }
+
 .active-nav{
     color:#925239fb;
     cursor:default;
 }
 
-@media (max-width: 600px) {
+.basket{
+    position: absolute;
+    top:20px;
+    right:20px;
+}
+
+.basket:hover{
+    color:rgb(123, 128, 56);
+}
+
+@media (max-width: 800px) {
 
     .header-container{
         flex-direction: column;
@@ -72,8 +89,18 @@ nav{
     }
 
     .navigation-list li{
-        text-decoration: underline;
         padding-bottom: 10px;
+    }
+
+    .disable-nav::before{
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: 7px;
+        width: 0;
+        height: 2px;
+        background-color: #181717;
+        transition: width 0.3s ease, left 0.3s ease;
     }
     
 }

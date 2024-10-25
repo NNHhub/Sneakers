@@ -1,0 +1,14 @@
+<div class="window">
+<section class="confirm-section">
+    <h5 mat-dialog-title>Confirm</h5>
+    <div mat-dialog-content>Please add password to delete account</div>
+    <mat-form-field class="input-block">
+      <mat-label>Password:</mat-label>
+      <input type="password" matInput [formControl]="passwordControl">   
+    </mat-form-field>
+    <div mat-dialog-actions>
+      <button class="confirm-button delete" mat-button (click)="deleteObj()">Delete</button>
+      <button class="confirm-button" mat-button (click)="cancelDel()">Cancel</button>
+    </div>
+</section>
+</div>
