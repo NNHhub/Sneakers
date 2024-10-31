@@ -1,1 +1,23 @@
-<p>admin works!</p>
+<section>
+    <div class="picture-block">
+        <h2 *ngIf="!(imageSrc|async)">Select main picture</h2>
+        <article class="main-add-block">
+            <button *ngIf="!(imageSrc|async)" id="add-button" type="button" mat-raised-button (click)="fileInput.click()"><mat-icon>add</mat-icon></button>
+            <input hidden (change)="onFileSelected()" #fileInput type="file">
+            <img id="selected-image" *ngIf="imageSrc|async" src="{{imageSrc|async}}" alt="Selected Image" >
+            <button *ngIf="(imageSrc|async)" id="delete-button"  (click)="deleteImg()"><mat-icon>close</mat-icon></button>
+        </article>
+    </div>
+
+    <div class="picture-block">
+        <h2 *ngIf="!(imageSrc|async)">Select additional pictures</h2>
+        <article class="add-block">
+            <div class="little-add-block">
+                <button *ngIf="!(imageSrc|async)" id="little-add-button" type="button" mat-raised-button (click)="fileInput.click()"><mat-icon>add</mat-icon></button>
+                <input hidden (change)="onFileSelected()" #fileInput type="file">
+                <img id="selected-image" *ngIf="imageSrc|async" src="{{imageSrc|async}}" alt="Selected Image" >
+                <button *ngIf="(imageSrc|async)" id="delete-button"  (click)="deleteImg()"><mat-icon>close</mat-icon></button>
+            </div>
+        </article>
+    </div>
+</section>

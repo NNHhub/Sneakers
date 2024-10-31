@@ -70,7 +70,6 @@ export class ProfileComponent {
 
         }        
       });
-      
     }
 
   logout(){
