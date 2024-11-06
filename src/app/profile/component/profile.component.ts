@@ -3,7 +3,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { DeleteConfirmComponent } from 'app/confirmation/delete-confirm.component';
-import { ProfileService } from '../profile.service';
+import { ProfileService } from '../services/profile.service';
 import { Store } from '@ngrx/store';
 import { ProfileStoreSelector } from 'app/store/selectors/profile.selector';
 import { changeProfile, getProfile } from 'app/store/actions/profile.action';

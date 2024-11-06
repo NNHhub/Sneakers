@@ -10,6 +10,8 @@ import { profileGuard } from './profile/guard/profile.guard';
 import { loginGuard } from './signin/guard/login.guard';
 import { AdminComponent } from './admin/component/admin.component';
 import { adminGuard } from './admin/guard/admin.guard';
+import { CreateComponent } from './admin/pages/create/create.component';
+import { StoreComponent } from './admin/pages/store/store.component';
 
 export const routes: Routes = [
     {
@@ -55,5 +57,16 @@ export const routes: Routes = [
         path:'admin',
         component:AdminComponent,
         
+        children:[
+            {
+                path:'create',
+                component:CreateComponent
+            },
+
+            {
+                path:'store',
+                component:StoreComponent
+            }
+        ]
     }
 ];

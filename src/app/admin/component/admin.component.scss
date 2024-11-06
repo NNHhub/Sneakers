@@ -1,81 +1,55 @@
-section{
+.admin-content{
     display: grid;
-    grid-template-columns: 0.5fr 1fr;
+    min-height: 100vh;
+    grid-template-columns: 0.2fr 1fr;
 }
 
-.picture-block{
+.admin-menu{
+    background-color: #fcf4d0;
+}
+nav{
+    flex:1;
+}
+
+a{
+    text-decoration: none;
+    color:inherit;
+}
+
+.navigation-list {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 10px;
+    list-style: none;
 }
 
-.main-add-block{
-    display: flex;
+.navigation-list li{
     position: relative;
-    flex-direction: column;
-    align-items: center;
-    margin: 0 auto;
-    border: 3px solid rgb(218, 204, 204);
-    border-radius: 10px;
-    overflow: hidden;
-    width: 300px;
+    margin-top: 20px;
+    font-size: 24px;
 }
 
-.add-block{
-    display: flex;
-    position: relative;
-    flex-direction: column;
-    padding: 20px;
-    border: 3px solid rgb(218, 204, 204);
-    border-radius: 10px;
-    overflow: hidden;
-    width: 500px;
-}
-
-#add-button{
-    height: 40px;
-    min-width: 40px ;
-    margin: 130px;
-}
-
-.little-add-block{
-    display: flex;
-    position: relative;
-    flex-direction: column;
-    align-items: center;
-    border: 3px solid rgb(218, 204, 204);
-    border-radius: 10px;
-    overflow: hidden;
-    width: 120px;
-}
-
-#little-add-button{
-    height: 40px;
-    min-width: 40px ;
-    margin: 50px;
-}
-
-#delete-button{
+.disable-nav::before{
+    content: '';
     position: absolute;
-    border: none;
-    background-color: inherit;
-    color:rgb(107, 152, 163);
-    right: 10px;
-    top: 10px;
+    left: 50%;
+    bottom: -5px;
+    width: 0;
+    height: 3px;
+    background-color: #181717;
+    transition: width 0.3s ease, left 0.3s ease;
+}
+.disable-nav:hover::before{
+    width:100%;
+    left: 0;
 }
 
-#delete-button:hover{
+.navigation-list li:hover{
     cursor: pointer;
-    color:rgb(136, 127, 127);
 }
 
-#selected-image{
-    position: relative;
-
-    width: 300px;
-}
-
-::ng-deep .mat-mdc-raised-button>.mat-icon {
-    margin-right: 0 !important;
-    margin-left: 0 !important;
+.active-nav{
+    color:#925239fb;
+    cursor:default;
 }

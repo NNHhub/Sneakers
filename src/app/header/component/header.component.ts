@@ -25,8 +25,6 @@ export class HeaderComponent {
     this.router.events.subscribe(() => {
       this.activeLink = this.router.url;
     });
-
-
   }
 
   isAutorized(): Observable<boolean> {

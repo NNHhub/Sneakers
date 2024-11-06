@@ -1,0 +1,143 @@
+section{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.first-adding{
+    position: relative;
+    border: 3px solid #dacccc;
+    border-radius: 10px;
+    margin: 20px;
+    padding: 20px 30px 80px 20px;
+}
+.text-block{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    margin: 40px;
+}
+
+.input-block{
+    display: block;
+    width: 400px;
+    margin-left: 20px;
+}
+
+.picture-adding{
+    display: grid;
+    margin-top: 30px;
+    grid-template-columns: 0.5fr 1fr;
+}
+
+.picture-block{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-add-block{
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgb(218, 204, 204);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+}
+
+.add-block{
+    display: grid;
+    position: relative;
+    grid-template-columns: repeat(4, 1fr);
+    gap:10px;
+    padding: 20px;
+    border: 3px solid rgb(218, 204, 204);
+    border-radius: 10px;
+    overflow: hidden;
+    min-width: 400px;
+    min-height: 300px;
+}
+
+#add-button{
+    height: 40px;
+    min-width: 40px;
+}
+
+#save-button{
+    position: absolute;
+    top:20px;
+    right:40px;
+    height: 40px;
+    width: 200px;
+}
+
+#color-button{
+    position: absolute;
+    bottom:20px;
+    right:40px;
+    height: 40px;
+    width: 200px;
+    
+}
+
+.little-add-block{
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    border: 3px solid rgb(218, 204, 204);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+}
+
+#little-add-button{
+    height: 40px;
+    min-width: 40px ;
+    margin: 50px;
+}
+
+#delete-button{
+    position: absolute;
+    border: none;
+    background-color: inherit;
+    color:rgb(107, 152, 163);
+    right: 10px;
+    top: 10px;
+}
+
+#delete-button:hover{
+    cursor: pointer;
+    color:rgb(136, 127, 127);
+}
+
+#selected-image{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+::ng-deep .mat-mdc-raised-button>.mat-icon {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--invalid .mdc-line-ripple::before{
+    border-bottom-color: inherit !important;
+}
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--invalid .mdc-floating-label{
+    color: inherit !important;
+}
+
+::ng-deep .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-text-field__input{
+    caret-color: inherit !important;
+}
+
+::ng-deep html{
+    --mdc-filled-text-field-error-focus-active-indicator-color: inherit !important;
+}

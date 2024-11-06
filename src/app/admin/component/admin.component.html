@@ -1,23 +1,14 @@
-<section>
-    <div class="picture-block">
-        <h2 *ngIf="!(imageSrc|async)">Select main picture</h2>
-        <article class="main-add-block">
-            <button *ngIf="!(imageSrc|async)" id="add-button" type="button" mat-raised-button (click)="fileInput.click()"><mat-icon>add</mat-icon></button>
-            <input hidden (change)="onFileSelected()" #fileInput type="file">
-            <img id="selected-image" *ngIf="imageSrc|async" src="{{imageSrc|async}}" alt="Selected Image" >
-            <button *ngIf="(imageSrc|async)" id="delete-button"  (click)="deleteImg()"><mat-icon>close</mat-icon></button>
-        </article>
-    </div>
+<section class="admin-content">
+    <aside class="admin-menu">
+        <nav>
+            <ul class="navigation-list">
+                <li><a [ngClass]="activeLink==='/admin/create' ? 'active-nav' : 'disable-nav'" [routerLink]="['create']">Create</a></li>
+                <li><a [ngClass]="activeLink==='/admin/store' ? 'active-nav' : 'disable-nav'" [routerLink]="['store']">Store</a></li>
+            </ul>
+        </nav>
+    </aside>
 
-    <div class="picture-block">
-        <h2 *ngIf="!(imageSrc|async)">Select additional pictures</h2>
-        <article class="add-block">
-            <div class="little-add-block">
-                <button *ngIf="!(imageSrc|async)" id="little-add-button" type="button" mat-raised-button (click)="fileInput.click()"><mat-icon>add</mat-icon></button>
-                <input hidden (change)="onFileSelected()" #fileInput type="file">
-                <img id="selected-image" *ngIf="imageSrc|async" src="{{imageSrc|async}}" alt="Selected Image" >
-                <button *ngIf="(imageSrc|async)" id="delete-button"  (click)="deleteImg()"><mat-icon>close</mat-icon></button>
-            </div>
-        </article>
-    </div>
+    <article class="router-content">
+        <router-outlet></router-outlet>
+    </article>
 </section>
