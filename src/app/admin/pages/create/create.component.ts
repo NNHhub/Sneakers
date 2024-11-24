@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { FormGroup, FormBuilder, Validators, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, ReactiveFormsModule, FormArray } from '@angular/forms';
+import { NgxCurrencyDirective } from 'ngx-currency';
+import { HttpClient } from '@angular/common/http';
+import { Buffer } from 'buffer';
 
 @Component({
   selector: 'app-create',
@@ -15,64 +17,96 @@ import { FormGroup, FormBuilder, Validators, FormControl, ReactiveFormsModule } 
     ReactiveFormsModule,
     MatIconModule,
     MatInputModule,
+    NgxCurrencyDirective
   ],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
 })
 export class CreateComponent {
   sneakersAdd:FormGroup;
-  sneakName = new FormControl();
-  constructor(private fb:FormBuilder){
+  sneakName = new FormControl('', Validators.required);
+  constructor(private fb:FormBuilder, private cd: ChangeDetectorRef, private http: HttpClient){
     this.sneakersAdd = this.fb.group({
-      color:[[],[Validators.required]],
-      price:[[],[Validators.required]],
-      mainPic:[[],[Validators.required]],
-      addPic: this.fb.array([])
+      variants: this.fb.array([
+        this.createColorGroup()
+      ])
     })
   }
-  
-  @ViewChild('mainFileInput', { static: false }) mainFileInput!: ElementRef;
-  @ViewChild('addFileInput', { static: false }) addFileInput!: ElementRef;
-  mainImageSrcSubj = new BehaviorSubject < string | ArrayBuffer | null > (null);
-  addImageSrcSubj = new BehaviorSubject < (string | ArrayBuffer)[]> ([]);
-  mainImageSrc:Observable< string | ArrayBuffer | null > = this.mainImageSrcSubj.asObservable();
-  addImageSrc:Observable< (string | ArrayBuffer)[] > = this.addImageSrcSubj.asObservable();
 
-  onMainFileSelected(): void {
-    const file = this.mainFileInput.nativeElement.files?.[0];
+  onMainFileSelected(event: Event, index:number): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => {
-        this.mainImageSrcSubj.next(reader.result);
+      reader.onload = (loadFile) => {
+        this.variants.at(index).patchValue({ mainPic: loadFile.target?.result });
+        this.cd.detectChanges();
       };
       reader.readAsDataURL(file);
     }
-    this.mainFileInput.nativeElement.value = '';
+    input.value = '';
   }
 
-  onAddFileSelected(): void {
-    const file = this.addFileInput.nativeElement.files?.[0];
+  onAddFileSelected(event: Event, index:number): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result;
-        if (result !== null) {
-          const arr: (string | ArrayBuffer)[] = this.addImageSrcSubj.getValue();
-          arr.push(result);
-          this.addImageSrcSubj.next(arr);
+      reader.onload = (loadFile) => {
+        if (loadFile.target?.result !== null) {
+          const control = this.variants.at(index).get('addPic') as FormArray;
+          control.push(this.fb.control(loadFile.target?.result));
+          this.cd.detectChanges();
         }
-    };
+      };
       reader.readAsDataURL(file);
     }
-    this.addFileInput.nativeElement.value = '';
+    input.value = '';
   }
 
-  deleteMainImg(){
-    this.mainImageSrcSubj.next(null);
+  get variants(): FormArray {
+    return this.sneakersAdd.get('variants') as FormArray;
   }
 
-  deleteAddImg(deleted:number){
-    const newArr = this.addImageSrcSubj.getValue();
-    newArr.splice(deleted, 1);     
+  deleteMainImg(index:number){
+    this.variants.at(index).patchValue({ mainPic: '' });
   }
+
+  deleteAddImg(index:number,deleted:number){
+    const control = this.variants.at(index).get('addPic') as FormArray;
+    control.removeAt(deleted);
+  }
+
+  createColorGroup(): FormGroup {
+    return this.fb.group({
+        color: ['', Validators.required],
+        price: [0, Validators.required],
+        mainPic:['',[Validators.required]],
+        addPic: this.fb.array([])
+    });
+  }
+
+  deleteColorGroup(index:number):void{
+    this.variants.removeAt(index);
+  }
+
+  addColor(): void {
+    this.variants.push(this.createColorGroup());
+  }
+
+  createSneaker(){
+    const body = {name:this.sneakName.value, details: this.variants.value};
+    console.log(this.variants.value)
+    this.http.post('http://localhost:3000/sneakers/create',body).subscribe({
+      next:(val)=>{
+        console.log('All good', val);
+      },
+      error:(error)=>{
+        console.log('Something wrong', error);
+      }
+    })
+  }
+
 }
