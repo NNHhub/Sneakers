@@ -1,12 +1,12 @@
-<div class="catalog-listing" *ngIf="(sneakers|async) as sneakList">
-    <div class="sneakers-card" *ngFor="let list of sneakList.details; let i = index">
-        <img id="selected-image" [src]="list.main_picture" alt="Selected Image" >
+<div class="catalog-listing">
+    <div class="sneakers-card" *ngFor="let list of (sneakers|async); let i = index">
+        <img id="selected-image" [src]="'http://localhost:3000/' + list.mainPic" alt="Selected Image" decoding="async">
         @if(isFavorite.getValue()[i]){
             <button class="favorites" (click)="changeFavorite(i)"><mat-icon class="icon">favorite</mat-icon></button>   
         }@else{
             <button class="favorites" (click)="changeFavorite(i)"><mat-icon class="icon">favorite_border</mat-icon></button>
         }
-        <p>{{sneakList.name}}, {{list.color_name}}</p>
+        <p>{{list.name}}, {{list.color}}</p>
         <p>{{list.price}} $</p>
     </div>
 </div>

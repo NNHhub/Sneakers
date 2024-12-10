@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { BehaviorSubject} from 'rxjs';
+import { BehaviorSubject, take} from 'rxjs';
 import { ISneakers } from '../model/sneaker.model';
+import { Store } from '@ngrx/store';
+import { CatalogStoreSelector} from 'app/store/selectors/catalog.selector';
+import { getCatalog } from 'app/store/actions/catalog.action';
 
 
 @Component({
@@ -17,17 +19,22 @@ import { ISneakers } from '../model/sneaker.model';
   styleUrl: './catalog.component.scss'
 })
 export class CatalogComponent {
-  sneakersSubj = new BehaviorSubject<ISneakers|null>(null);
+  sneakersSubj = new BehaviorSubject<{
+    name:string,
+    color:string,
+    mainPic:string,
+    price:number
+  }[]|null>(null);
   sneakers = this.sneakersSubj.asObservable();
-  constructor(private http:HttpClient){
-    this.http.get('http://localhost:3000/sneakers/getSneaker').subscribe({
-      next:(val) => {
-        this.sneakersSubj.next(val as ISneakers);
-      },
-      error:(error)=>{
-        console.log('Something wrong', error);
+  constructor(private store:Store){
+    this.store.select(CatalogStoreSelector).pipe(take(2)).subscribe(data=>{
+      if(!data){
+        this.store.dispatch(getCatalog());
+      }else{
+        this.sneakersSubj.next(data);
       }
     })
+    
   }
   isFavorite = new BehaviorSubject<boolean[]>([]);
 
@@ -39,9 +46,9 @@ export class CatalogComponent {
       arr[index] = arr[index] ? false : true;
       this.isFavorite.next(arr);
     } else {
-      this.sneakersSubj.getValue()?.details.forEach(()=>{
+      this.sneakersSubj.getValue()?.map(()=>{
         arr.push(false);
-      })
+      });
       this.isFavorite.next(arr);
     }
   }

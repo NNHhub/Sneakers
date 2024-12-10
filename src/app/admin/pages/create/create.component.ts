@@ -98,7 +98,6 @@ export class CreateComponent {
 
   createSneaker(){
     const body = {name:this.sneakName.value, details: this.variants.value};
-    console.log(this.variants.value)
     this.http.post('http://localhost:3000/sneakers/create',body).subscribe({
       next:(val)=>{
         console.log('All good', val);
