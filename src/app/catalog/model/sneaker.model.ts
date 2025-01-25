@@ -1,6 +1,9 @@
-import { SneakersDetails } from "./sneakersDetails.model";
-
 export interface ISneakers{
+    id:number,
     name: string,
-    details:SneakersDetails[]
+    color_id:number,
+    color_name: string,
+    price: number,
+    main_picture: string
+    pictures?: string[]
 }

@@ -10,16 +10,36 @@ import { CatalogService } from 'app/catalog/services/catalog.service';
 export class CatalogEffects {
   constructor(private actions$: Actions, private catalogService: CatalogService) {}
   
-  loadProfile$ = createEffect(() =>
+  loadCatalog$ = createEffect(() =>
     this.actions$.pipe(
       ofType(catalogActions.getCatalog),
-      switchMap(()=>
-        this.catalogService.getCatalogData().pipe(
+      switchMap(({pageToken})=>
+        this.catalogService.getCatalogData(pageToken).pipe(
           map((catalog) =>{
-            console.log('Profile has been gotten seccesessfuly');
-            return catalogActions.getCatalogSuccess({catalog});
+            console.log('Catalog has been gotten seccesessfuly');
+            this.catalogService.setNextPageToken = catalog.nextPageToken;
+            return catalogActions.getCatalogSuccess({catalog:catalog.items});
           }),
         catchError(error => of(catalogActions.getCatalogFailure({ error })))
+        )
+      )
+    )
+  );
+
+  searchInCatalog$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(catalogActions.searchInCatalog),
+      switchMap(({value,pageToken})=>
+        this.catalogService.sneakerSearch(value,pageToken).pipe(
+          map((catalog) =>{
+            console.log('Search has been gotten seccesessfuly');
+            this.catalogService.setNextPageToken = catalog.nextPageToken;
+            return catalogActions.getCatalogSuccess({catalog:catalog.items});
+          }),
+        catchError(error =>{
+          console.log('Error when try to search',error);
+          return of(catalogActions.getCatalogFailure({ error }))
+        } )
         )
       )
     )

@@ -14,6 +14,16 @@ export const catalogReducer = createReducer(
   initialState,
   on(catalogActions.getCatalogSuccess, (state,{catalog})=> ({
     ...state,
-    catalog
-  }))
+    catalog:state.catalog ? [...state.catalog,...catalog] : catalog
+  })),
+
+  on(catalogActions.searchInCatalogSuccess, (state,{catalog})=> ({
+    ...state,
+    catalog:state.catalog ? [...state.catalog,...catalog] : catalog
+  })),
+
+  on(catalogActions.deleteCatalog, (state)=> ({
+    ...state,
+    catalog:[]
+  })),
 )

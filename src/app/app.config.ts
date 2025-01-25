@@ -11,6 +11,7 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { reducers } from './store/reducers/app.reducers';
 import { ProfileEffects } from './store/effects/profile.effect';
 import { CatalogEffects } from './store/effects/catalog.effect';
+import { AdminStoreEffects } from './store/effects/admin-store.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,7 +20,7 @@ export const appConfig: ApplicationConfig = {
     ɵprovideZonelessChangeDetection(),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideStore(reducers),
-    provideEffects([ProfileEffects,CatalogEffects]),
+    provideEffects([ProfileEffects,CatalogEffects,AdminStoreEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })
 ]
 };

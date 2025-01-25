@@ -1,0 +1,214 @@
+.displayed-items{
+    width: 90%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap:20px;
+    padding: 2% 0 2% 15%;
+}
+
+.edit{
+    position: absolute;
+    right: 2px;
+    height: 23px;
+    border: none;
+    background-color: inherit;
+}
+
+.icon{
+    text-align: center;
+}
+
+.edit:hover{
+    cursor: pointer;
+    color:blue;
+}
+
+.sneakers-card{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    text-align: center;
+    width: 280px;
+    height: 355px;
+    border: 3px solid black;
+    border-radius: 5px;
+}
+
+#card-image{
+    display:block;
+    max-width: 100%;
+    max-height: 100%;
+    margin-bottom: 10px;
+    height: 85%;
+    transition: filter 0.3s;
+}
+
+.sneakers-card p{
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+}
+
+.search-content{
+    width: 100%;
+    background-color: rgb(235, 235, 228);
+} 
+
+#search{
+    width: 90%;
+    padding: 5px;
+    margin: 10px;
+    border-radius: 3px;
+}
+
+.search-button{
+    position: relative;
+    padding: 5px;
+    margin:0 auto;
+    font-size: 20px;
+    color:white;
+    background: #d3c687;
+    border-color:#d3c687;
+    border-radius: 4px;
+    cursor: pointer;
+} 
+
+img{
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.change-section{
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.adding-block{
+    position: relative;
+    border: 3px solid #dacccc;
+    border-radius: 10px;
+    margin: 20px;
+    padding: 20px 30px 80px 20px;
+}
+
+.input-block{
+    display: block;
+    width: 400px;
+    margin-left: 20px;
+}
+
+.picture-adding{
+    display: grid;
+    margin-top: 30px;
+    grid-template-columns: 0.5fr 1fr;
+}
+
+.picture-block{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-add-block{
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgb(218, 204, 204);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 300px;
+    height: 300px;
+}
+
+.add-block{
+    display: grid;
+    position: relative;
+    grid-template-columns: repeat(4, 1fr);
+    gap:10px;
+    padding: 20px;
+    border: 3px solid rgb(218, 204, 204);
+    border-radius: 10px;
+    overflow: hidden;
+    min-width: 400px;
+    min-height: 300px;
+}
+
+#add-button{
+    height: 40px;
+    min-width: 40px;
+}
+
+#save-button{
+    position: absolute;
+    top:20px;
+    right:40px;
+    height: 40px;
+    width: 200px;
+}
+
+.little-add-block{
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    border: 3px solid rgb(218, 204, 204);
+    border-radius: 10px;
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+}
+
+#little-add-button{
+    height: 40px;
+    min-width: 40px ;
+    margin: 50px;
+}
+
+#delete-button{
+    position: absolute;
+    border: none;
+    background-color: inherit;
+    color:#804747;
+    right: 10px;
+    top: 10px;
+}
+
+#delete-button:hover{
+    cursor: pointer;
+    color:rgb(136, 127, 127);
+}
+
+#selected-image{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+::ng-deep .mat-mdc-raised-button>.mat-icon {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--invalid .mdc-line-ripple::before{
+    border-bottom-color: inherit !important;
+}
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--invalid .mdc-floating-label{
+    color: inherit !important;
+}
+
+::ng-deep .mdc-text-field--filled.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-text-field__input{
+    caret-color: inherit !important;
+}
+
+::ng-deep html{
+    --mdc-filled-text-field-error-focus-active-indicator-color: inherit !important;
+}

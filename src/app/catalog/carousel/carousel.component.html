@@ -1,0 +1,10 @@
+<section class="carousel-container" *ngIf="(componentSettings$|async) as componentSettings">
+    <div class="carousel">
+        <div [ngClass]="componentSettings.direction" *ngFor="let item of shownContent$|async">
+            <img [src]="'http://localhost:3000/' + item" alt="carousel picture" (click)="onMouseOver(item)" draggable="false">
+        </div> 
+    </div>
+    
+</section>
+
+  

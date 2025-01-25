@@ -1,6 +1,6 @@
-export interface SneakersDetails{
-    color_name: string,
-    price: number,
-    main_picture: string
-    pictures: string[]
+import { ISneakers } from "./sneaker.model"
+
+export interface SneakersResponse{
+    nextPageToken:number,
+    items: ISneakers[]
 }

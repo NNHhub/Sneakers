@@ -1,0 +1,7 @@
+<section class="pagination" #alarm *ngIf="pageSubject.getValue().length>1">
+    <div class="wrap">
+      <div *ngFor="let button of (getButton|async)">
+        <button [class]="(pagination.getValue().currentPage$|async) === button ? 'active-pagination-button' : 'pagination-button'" (click)=" changePage(button)">{{button}}</button>
+      </div>
+    </div>
+  </section>

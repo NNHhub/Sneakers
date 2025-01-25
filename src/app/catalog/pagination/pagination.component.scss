@@ -1,0 +1,28 @@
+.pagination {
+    display:flex;
+    position:relative;
+    justify-content:center;
+    padding-bottom: 20px;
+  }
+  .wrap{
+    display:flex;
+    gap:5px;
+  }
+  .pagination-button{
+    padding: 6px;
+    color:white;
+    background: #ebe4c0;
+    border-color:#ebe4c0;
+    border-radius: 1px 1px;
+    cursor: pointer;
+  }
+  .active-pagination-button{
+    pointer-events: none;
+    cursor: not-allowed;
+    padding: 6px;
+    color:white;
+    background: #acaaa0;
+    border-color:#acaaa0;
+    border-radius: 1px 1px;
+    cursor: pointer;
+  }
