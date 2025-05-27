@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, filter, fromEvent, map, Observable, take} from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, fromEvent, map, Observable, take} from 'rxjs';
 import { Store } from '@ngrx/store';
 import { CatalogStoreSelector} from 'app/store/selectors/catalog.selector';
 import { deleteCatalog, getCatalog, searchInCatalog } from 'app/store/actions/catalog.action';
 import { PaginationComponent } from "../pagination/pagination.component";
-import { PaginationService } from '../services/pagination.service';
 import { RouterModule } from '@angular/router';
 import { ISneakers } from '../model/sneaker.model';
 import { CatalogService } from '../services/catalog.service';
+
+import { basketIdSelector } from 'app/store/selectors/basket.selector';
+import { addBasketItem, deleteBasketItem, getBasket } from 'app/store/actions/basket.action';
 
 
 @Component({
@@ -25,10 +27,12 @@ import { CatalogService } from '../services/catalog.service';
   styleUrl: './catalog.component.scss'
 })
 export class CatalogComponent implements AfterViewInit{
+  basketId$:Observable<number[]> = this.store.select(basketIdSelector);
 
   paginationCurrentPage!: Observable<number>;
   currentPage = new BehaviorSubject<number>(1);
   sneakers$ : Observable<ISneakers[]> = this.store.select(CatalogStoreSelector);
+
   @ViewChild('inputSearch') inputSearch!: ElementRef<HTMLInputElement>;
   displayedSneakers$!:Observable<ISneakers[]|null>;
   settings = {
@@ -40,7 +44,7 @@ export class CatalogComponent implements AfterViewInit{
       map(([sneakers, currentPage]) => {
         if (sneakers.length) {
           const token = this.catalogService.getNextPageToken;
-          if((sneakers.length/18)<currentPage && token){
+          if((sneakers.length/15)<currentPage && token){
             if(this.inputSearch.nativeElement.value){
               this.store.dispatch(searchInCatalog(this.inputSearch.nativeElement.value,token));
             } else {
@@ -60,7 +64,8 @@ export class CatalogComponent implements AfterViewInit{
         this.store.dispatch(getCatalog());
       }   
     })
-    
+// if user not authorized don't ask for a basket
+    this.store.dispatch(getBasket());
   }
 
   ngAfterViewInit(): void {
@@ -70,11 +75,11 @@ export class CatalogComponent implements AfterViewInit{
         debounceTime(1000),
         distinctUntilChanged()).subscribe((searchItem)=>{
           if(searchItem){
-            this.catalogService.setNextPageToken = null;
+
             this.store.dispatch(deleteCatalog());
             this.store.dispatch(searchInCatalog(searchItem));
           } else {
-            this.catalogService.setNextPageToken = null;
+
             this.store.dispatch(deleteCatalog());
             this.store.dispatch(getCatalog());
           }
@@ -90,9 +95,25 @@ export class CatalogComponent implements AfterViewInit{
     });
   }
 
-  isFavorite = new BehaviorSubject<boolean[]>([]);
-
-  changeFavorite(index?:number){
   
+
+  changeFavorite(index:number){
+    this.basketId$.pipe(take(1)).subscribe({
+      next:(value) => {
+        if(value.includes(index)){
+          this.store.dispatch(deleteBasketItem({ id:index }))
+        } else {
+          this.sneakers$.pipe(take(1)).subscribe({
+            next:(sneaker)=>{
+              const item = sneaker.find( val => val.id === index ) as ISneakers;
+              this.store.dispatch(addBasketItem({ item }));
+            }
+          })
+        }
+      },
+      error:(error) => {
+        console.log(error);
+      }
+    })
   }
 }

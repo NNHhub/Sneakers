@@ -1,1 +1,18 @@
-<p>basket works!</p>
+<section class="basket-section">
+    <div class="favorite-items" *ngIf="(basket$|async)?.length">  
+        <div class="favorite-card" *ngFor="let list of (basket$|async); let i = index"> 
+            <img id="selected-image" [src]="'http://localhost:3000/' + list.main_picture" alt="Selected Image" decoding="async">
+            <div>
+                <a class="item-name" [routerLink]="['/details',list.id]"><p>{{list.name}}</p><p>{{list.color_name}}</p></a>
+                <p>{{list.price}} $</p>
+            </div>
+            <div class="adding-block">
+                    <button class="change-value-button" (click)="decrement()">-</button>
+                    <input class="sneaker-count" readonly> 
+                    <button class="change-value-button" (click)="increment()">+</button>  
+                </div>
+            
+            <button class="favorites" (click)="deleteItem(list.id)"><mat-icon class="icon">close</mat-icon></button> 
+        </div>
+    </div>
+</section>

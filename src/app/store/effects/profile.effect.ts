@@ -19,7 +19,11 @@ export class ProfileEffects {
             console.log('Profile has been gotten seccesessfuly');
             return profileActions.getProfileSuccess({profile});
           }),
-        catchError(error => of(profileActions.getProfileFailure({ error })))
+        catchError(error => {
+          localStorage.removeItem('token');
+          location.reload();
+          return of(profileActions.getProfileFailure({ error }));
+        })
         )
       )
     )

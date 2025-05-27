@@ -74,7 +74,7 @@ export class ProfileComponent {
 
   logout(){
     localStorage.removeItem('token');
-    location.reload()
+    location.reload();
   }
 
   deleteUser(){

@@ -1,33 +1,65 @@
 <section *ngIf="(sneakers$|async) as sneakers">
-
-    <div class="search-content">
-        <input #inputSearch id="search" type="search">
+    
+    <div class="search-content" *ngIf="(suggested$ | async) as suggested">
+        <mat-autocomplete #auto="matAutocomplete" >
+            @for( option of suggested|searchStore:searchControl.value; track option){
+                <mat-option [value]="option"> {{ option }} </mat-option>
+            }   
+        </mat-autocomplete>
+        <input #inputSearch [formControl]="searchControl" id="search" type="search" [matAutocomplete]="auto">
         <button class="search-button" (click)="search()">Search</button>
     </div>
     
     <ng-container *ngIf="isEditingCard">
         <div class="change-section">
             <div class="adding-block">
-        
-                <mat-form-field class="input-block">
-                    <mat-label>Name of sneaker:</mat-label>
-                    <input type="text" matInput [formControl]="sneakName">
-                </mat-form-field>
-        
                 <form [formGroup]="sneakersUpdate">
-                    
+                    <mat-form-field class="input-block">
+                        <mat-label>Name of sneaker:</mat-label>
+                        <input type="text" matInput formControlName="name">
+                    </mat-form-field>
+
+                    <mat-form-field class="textarea-block">
+                        <mat-label>Sneaker description:</mat-label>
+                        <textarea matInput formControlName="description"></textarea>
+                    </mat-form-field>
+        
                     <button  id="save-button" type="button" mat-raised-button (click)="updateSneaker()">Update sneaker</button>
+                    <div class="color-price-sizes">
 
-                    <mat-form-field class="input-block">
-                        <mat-label>Color:</mat-label>
-                        <input type="text" matInput formControlName="color">
-                    </mat-form-field>
+                        <div class="color-price">
+                            <mat-form-field class="input-block">
+                                <mat-label>Color:</mat-label>
+                                <input type="text" matInput formControlName="color">
+                            </mat-form-field>
+        
+                            <mat-form-field class="input-block">
+                                <mat-label>Price:</mat-label>
+                                <input currencyMask [options]="{ align: 'left', allowNegative: false, allowZero: true, prefix: '$ ', thousands: '.', decimal: ',' }" matInput formControlName="price" >
+                            </mat-form-field>
+                        </div>
 
-                    <mat-form-field class="input-block">
-                        <mat-label>Price:</mat-label>
-                        <input currencyMask [options]="{ align: 'left', allowNegative: false, allowZero: true, prefix: '$ ', thousands: '.', decimal: ',' }" matInput formControlName="price" >
-                    </mat-form-field>
-    
+                        
+                        <div class="sizes-section">
+                            <button *ngIf="isEditingSizes" class="close-button" (click)="closeSize()"><mat-icon>close</mat-icon></button>
+                            <h2>Sizes</h2>
+                            <mat-form-field class="input-block" *ngIf="isEditingSizes">
+                                <mat-label>Count of editing size:</mat-label>
+                                <input matInput [formControl]="sizeControl" >
+                            </mat-form-field>
+                            <button *ngIf="isEditingSizes" class="save-sizes-button" (click)="saveCountSize()">Save count</button>
+                            <div class="sizes-block" >
+                                <div [ngClass]="(activeSize$|async) === size ? 'active-size-bttn': 'disabled-size-bttn'" *ngFor="let size of sizes">
+                                    <button class="size-button" (click)="editSize(size)">
+                                        {{ size }}
+                                    </button>    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+
                     <div class="picture-adding">
 
                         <div class="picture-block">
@@ -68,8 +100,8 @@
     
     <div class="displayed-items">
         <div class="sneakers-card" *ngFor="let list of (displayedSneakers$|async); let i = index">
-            @if(!isEditingCard || (list.color_id !== editingId)){
-                <button class="edit" (click)="editSneakerCard(list.color_id)"><mat-icon class="icon">edit</mat-icon></button> 
+            @if(!isEditingCard || (list.id !== editingId)){
+                <button class="edit" (click)="editSneakerCard(list.id)"><mat-icon class="icon">edit</mat-icon></button> 
             }
             <img id="card-image" [src]="'http://localhost:3000/' + list.main_picture" alt="Selected Image" decoding="async">
             <p>{{list.name}}, {{list.color_name}}</p>

@@ -6,6 +6,11 @@
             <input type="text" matInput [formControl]="sneakName">
         </mat-form-field>
 
+        <mat-form-field class="textarea-block">
+            <mat-label>Sneaker description:</mat-label>
+            <textarea matInput [formControl]="sneakDescription"></textarea>
+        </mat-form-field>
+
         <form [formGroup]="sneakersAdd">
             <div formArrayName="variants">
                 <button  id="save-button" type="button" mat-raised-button (click)="createSneaker()">Create sneaker</button>

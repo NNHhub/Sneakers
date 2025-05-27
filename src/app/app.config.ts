@@ -12,6 +12,8 @@ import { reducers } from './store/reducers/app.reducers';
 import { ProfileEffects } from './store/effects/profile.effect';
 import { CatalogEffects } from './store/effects/catalog.effect';
 import { AdminStoreEffects } from './store/effects/admin-store.effect';
+import { BasketEffects } from './store/effects/basket.effect';
+import { PopularEffects } from './store/effects/popular.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,7 +22,7 @@ export const appConfig: ApplicationConfig = {
     ɵprovideZonelessChangeDetection(),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideStore(reducers),
-    provideEffects([ProfileEffects,CatalogEffects,AdminStoreEffects]),
-    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })
+    provideEffects([ProfileEffects, CatalogEffects, AdminStoreEffects, BasketEffects, PopularEffects]),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }), provideAnimationsAsync()
 ]
 };

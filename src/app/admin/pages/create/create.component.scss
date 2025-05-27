@@ -20,6 +20,7 @@ section{
 
 .input-block{
     display: block;
+    height: auto;
     width: 400px;
     margin-left: 20px;
 }
@@ -134,6 +135,19 @@ section{
     height: 100%;
     object-fit: cover;
 }
+
+.textarea-block{
+    display: block;
+    height: auto;
+    width: 100%;
+    padding: 0px 20px;
+}
+
+textarea {
+    min-height: 150px;
+    min-width: 500px;
+}
+
 
 ::ng-deep .mat-mdc-raised-button>.mat-icon {
     margin-right: 0 !important;

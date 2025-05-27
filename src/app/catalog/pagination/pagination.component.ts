@@ -2,6 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output } from
 import { CommonModule } from '@angular/common';
 import { Paginator } from '../model/paginator.model';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ISneakers } from '../model/sneaker.model';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class PaginationComponent implements OnChanges, AfterViewInit{
   
   @Input() inputPaginationSettings!:{
-    array:Observable<any[]>,
+    array:Observable<ISneakers[]>,
     itemPerPage?:number,
   } 
   
@@ -53,13 +54,15 @@ export class PaginationComponent implements OnChanges, AfterViewInit{
     })
     
   }
+
   ngAfterViewInit(): void {
     this.paginationCurrPage.emit(this.pagination.getValue().currentPage$);
-    
   }
+
   constructor(){
     this.setButtons();
   }
+  
   resetPagination(){
     this.pagination.next({
       length:this.lengthSubject.getValue(),

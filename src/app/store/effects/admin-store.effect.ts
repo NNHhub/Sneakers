@@ -17,8 +17,8 @@ export class AdminStoreEffects {
         this.catalogService.sneakerSearch(value,pageToken).pipe(
           map((catalog) =>{
             console.log('Search has been gotten seccesessfuly');
-            this.catalogService.setNextPageToken = catalog.nextPageToken;
-            return adminStoreActions.getAdminStoreSuccess({adminStore:catalog.items});
+            this.catalogService.setAdminNextPageToken = catalog.nextPageToken;
+            return adminStoreActions.getAdminStoreSuccess({ adminStore:catalog.items });
           }),
         catchError(error =>{
           console.log('Error when try to search',error);

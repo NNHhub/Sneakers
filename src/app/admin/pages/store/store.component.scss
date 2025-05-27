@@ -101,7 +101,17 @@ img{
 .input-block{
     display: block;
     width: 400px;
-    margin-left: 20px;
+
+}
+
+.color-price-sizes{
+    display: flex;
+    justify-content: space-between;
+}
+
+.color-price{
+    display: flex;
+    flex-direction: column;
 }
 
 .picture-adding{
@@ -191,6 +201,97 @@ img{
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.textarea-block{
+    display: block;
+    height: auto;
+    width: 100%;
+    
+}
+
+.sizes-block{
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(5, minmax(65px, max-content));
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.size-button{
+    border: none;
+    height: 100%;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.active-size-bttn {
+    border: 3px solid rgb(3, 2, 71);
+    text-align: center;
+    font-size: 42px;
+    font-weight: 600;
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.disabled-size-bttn {
+    border: 1px solid black;
+    text-align: center;
+    font-size: 42px;
+    font-weight: 600;
+    justify-items: center;
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.disabled-size-bttn:hover{
+    border: 3px solid rgb(127, 136, 6);
+}
+
+.disabled-size-bttn .size-button:hover{
+    cursor: pointer;
+}
+
+
+.sizes-section{
+    position: relative;
+}
+
+.close-button{
+    position: absolute;
+    border: none;
+    background-color: inherit;
+    color:#804747;
+    right: 10px;
+    top: 10px;
+}
+
+.close-button :hover{
+    cursor: pointer;
+    color:rgb(136, 127, 127);
+}
+
+.save-sizes-button{
+    position: relative;
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    color:white;
+    background: #d3c687;
+    border-color:#d3c687;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+textarea {
+    min-height: 150px;
+    min-width: 500px;
 }
 
 ::ng-deep .mat-mdc-raised-button>.mat-icon {

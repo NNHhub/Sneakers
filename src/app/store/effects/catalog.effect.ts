@@ -33,7 +33,7 @@ export class CatalogEffects {
         this.catalogService.sneakerSearch(value,pageToken).pipe(
           map((catalog) =>{
             console.log('Search has been gotten seccesessfuly');
-            this.catalogService.setNextPageToken = catalog.nextPageToken;
+            this.catalogService.setNextPageToken = catalog.nextPageToken;           
             return catalogActions.getCatalogSuccess({catalog:catalog.items});
           }),
         catchError(error =>{

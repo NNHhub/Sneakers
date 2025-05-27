@@ -25,6 +25,7 @@ import { Buffer } from 'buffer';
 export class CreateComponent {
   sneakersAdd:FormGroup;
   sneakName = new FormControl('', Validators.required);
+  sneakDescription = new FormControl('', Validators.required);
   constructor(private fb:FormBuilder, private cd: ChangeDetectorRef, private http: HttpClient){
     this.sneakersAdd = this.fb.group({
       variants: this.fb.array([
@@ -97,7 +98,7 @@ export class CreateComponent {
   }
 
   createSneaker(){
-    const body = {name:this.sneakName.value, details: this.variants.value};
+    const body = {name:this.sneakName.value, description: this.sneakDescription.value, details: this.variants.value};
     this.http.post('http://localhost:3000/sneakers/create',body).subscribe({
       next:(val)=>{
         console.log('All good', val);
