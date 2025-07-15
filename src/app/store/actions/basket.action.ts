@@ -30,14 +30,29 @@ export const addBasketItemFailure = createAction(
     props<{ error: 'Fail to add basket' }>()
 );
 
+export const updateBasketItem = createAction(
+    '[Bakset] Bakset item updated',
+    props<{ item:ISneakers }>()
+);
+
+export const updateBasketItemSuccess = createAction(
+    '[Bakset] Bakset item updating Success',
+    props<{ item:ISneakers }>()
+);
+
+export const updateBasketItemFailure = createAction(
+    '[Bakset] Bakset item updating failure',
+    props<{ error: 'Fail to add basket' }>()
+);
+
 export const deleteBasketItem = createAction(
     '[Bakset] Bakset item delete',
-    props<{ id:number }>()
+    props<{ id:number, size:number }>()
 );
 
 export const deleteBasketItemSuccess = createAction(
     '[Bakset] Bakset item delete Success',
-    props<{ id:number }>()
+    props<{ id:number, size:number }>()
 );
 
 export const deleteBasketItemFailure = createAction(

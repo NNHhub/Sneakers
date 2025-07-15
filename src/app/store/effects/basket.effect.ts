@@ -39,13 +39,28 @@ export class BasketEffects {
     )
   );
 
+  updateBasketItem$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(basketActions.updateBasketItem),
+      switchMap(({ item }) =>
+        this.basketService.updateBasket(item.id, item.size as number, item.count as number).pipe(
+          map(() => basketActions.updateBasketItemSuccess({ item })),
+          catchError((error) => {
+            console.log(error);
+            return of(basketActions.updateBasketItemFailure({ error }));
+          })
+        )
+      )
+    )
+  );
+
   deleteBasketItem$ = createEffect(() =>
     this.actions$.pipe(
       ofType(basketActions.deleteBasketItem),
-      switchMap(({ id })=>
-        this.basketService.deleteFromBasket(id).pipe(
+      switchMap(({ id, size })=>
+        this.basketService.deleteFromBasket(id, size).pipe(
           map(() =>{
-            return basketActions.deleteBasketItemSuccess({ id });
+            return basketActions.deleteBasketItemSuccess({ id, size });
           }),
         catchError(error => of(basketActions.deleteBasketItemFailure({ error })))
         )

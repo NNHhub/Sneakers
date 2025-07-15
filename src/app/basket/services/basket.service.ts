@@ -19,8 +19,18 @@ export class BasketService {
     return this.http.get<ISneakers[]>(`${this.API_URL}/getBasket`);
   }
 
-  deleteFromBasket(id: number){
-    const body = { id: id };
+  updateBasket(id: number, size: number, count: number){
+    const body = { color_id : id, size: size, count: count };
+    return this.http.post<number>(`${this.API_URL}/updateBasket`, body);
+  }
+
+  deleteFromBasket(id: number, size:number){
+    const body = { id: id, size: size };
     return this.http.post<number>(`${this.API_URL}/deleteBasket`, body);
+  }
+  
+  buyItems (items: ISneakers[]) {
+    const body = { items: items };
+    return this.http.post(`${this.API_URL}/buyItemsInBasket`, body);
   }
 }

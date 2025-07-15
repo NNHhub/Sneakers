@@ -75,11 +75,9 @@ export class CatalogComponent implements AfterViewInit{
         debounceTime(1000),
         distinctUntilChanged()).subscribe((searchItem)=>{
           if(searchItem){
-
             this.store.dispatch(deleteCatalog());
             this.store.dispatch(searchInCatalog(searchItem));
           } else {
-
             this.store.dispatch(deleteCatalog());
             this.store.dispatch(getCatalog());
           }
@@ -95,25 +93,4 @@ export class CatalogComponent implements AfterViewInit{
     });
   }
 
-  
-
-  changeFavorite(index:number){
-    this.basketId$.pipe(take(1)).subscribe({
-      next:(value) => {
-        if(value.includes(index)){
-          this.store.dispatch(deleteBasketItem({ id:index }))
-        } else {
-          this.sneakers$.pipe(take(1)).subscribe({
-            next:(sneaker)=>{
-              const item = sneaker.find( val => val.id === index ) as ISneakers;
-              this.store.dispatch(addBasketItem({ item }));
-            }
-          })
-        }
-      },
-      error:(error) => {
-        console.log(error);
-      }
-    })
-  }
 }

@@ -1,18 +1,99 @@
 <section class="basket-section">
-    <div class="favorite-items" *ngIf="(basket$|async)?.length">  
-        <div class="favorite-card" *ngFor="let list of (basket$|async); let i = index"> 
-            <img id="selected-image" [src]="'http://localhost:3000/' + list.main_picture" alt="Selected Image" decoding="async">
-            <div>
-                <a class="item-name" [routerLink]="['/details',list.id]"><p>{{list.name}}</p><p>{{list.color_name}}</p></a>
-                <p>{{list.price}} $</p>
-            </div>
-            <div class="adding-block">
-                    <button class="change-value-button" (click)="decrement()">-</button>
-                    <input class="sneaker-count" readonly> 
-                    <button class="change-value-button" (click)="increment()">+</button>  
+    <div class="warp-block">
+        <div class="contact-data">
+
+            <form  class="form-block" [formGroup]="basketForm">
+
+                <h3>Contact</h3>
+                <div class="contact">
+                    
+                    <mat-form-field>
+                        <mat-label>First name:</mat-label>
+                        <input id="first-name" type="text" formControlName="firstName" matInput>
+                    </mat-form-field>
+                    
+
+                    <mat-form-field>
+                        <mat-label>Last name:</mat-label>
+                        <input id="last-name" type="text" formControlName="lastName" matInput>
+                    </mat-form-field>
+                    
+
+                    <mat-form-field>
+                        <mat-label>Phone:</mat-label>
+                        <input id="phone" formControlName="phone" [mask]="'0 (000) 000-0000'" matInput>
+                    </mat-form-field>   
                 </div>
-            
-            <button class="favorites" (click)="deleteItem(list.id)"><mat-icon class="icon">close</mat-icon></button> 
+
+                <h3>Address</h3>
+                <div class="address">
+                    <mat-form-field>
+                        <mat-label>City:</mat-label>
+                        <input id="city" type="text" formControlName="city" matInput>
+                    </mat-form-field>
+                    
+                    <mat-form-field >
+                        <mat-label>Street:</mat-label>
+                        <input id="street" type="text" formControlName="street" matInput>
+                    </mat-form-field>
+                    
+                    <mat-form-field>
+                        <mat-label>House:</mat-label>
+                        <input id="house" type="text" formControlName="house" matInput>
+                    </mat-form-field> 
+
+                    <mat-form-field >
+                        <mat-label>Apartment:</mat-label>
+                        <input id="apartment" type="text" formControlName="apartment" matInput>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Entrance:</mat-label>
+                        <input id="entrance" type="text" formControlName="entrance" matInput>
+                    </mat-form-field>
+                </div>
+
+                <h3>Comments</h3>
+                <div class="comments">
+                    <mat-form-field>
+                        <mat-label>Comments:</mat-label>
+                        <textarea id="comments" formControlName="comments" matInput rows="10" cdkTextareaAutosize cdkAutosizeMaxRows="12"></textarea>
+                    </mat-form-field>
+                </div>
+            </form>
+
+        </div>
+        
+        <div class="basket-items" *ngIf="(basket$|async)?.length">  
+            <div class="basket-card" *ngFor="let list of (basket$|async); let i = index" [formGroup]="basketGroup"> 
+                <img id="selected-image" [src]="'http://localhost:3000/' + list.main_picture" alt="Selected Image" decoding="async">
+                <div>
+                    <a class="item-name" [routerLink]="['/details',list.id]"><p>{{list.name}}</p></a>
+                    <p>{{list.price}} $</p>
+                    <p>size {{list.size}} </p>
+                </div>
+                <div class="error-block">{{errorMassage[i]}}</div>
+                <div class="adding-block" formArrayName="counts">
+                    <button class="change-value-button" (click)="decrement(i,list.size)">-</button>
+                    <input name="count" class="sneaker-count" [value]="basketGroup.get('counts')!.value[i]" readonly> 
+                    <button class="change-value-button" (click)="increment(i,list.size)">+</button>  
+                </div>
+                <button class="delete-button" (click)="deleteItem(list.id, list.size)"><mat-icon class="icon">close</mat-icon></button> 
+            </div>
+            <div class="total-cost">
+                <div>
+                    <h3>
+                        Total:
+                    </h3>
+                    <div class="total-value">
+                        {{totalBasketCurr}} $
+                    </div>
+                    <div>
+                        <button class="purchase-button" (click)="purchase()">Purchase</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    
 </section>

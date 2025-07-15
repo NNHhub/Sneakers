@@ -97,6 +97,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit{
 
   changePage(pos:number){
     this.currPageSubject.next(pos);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   get getButton(){

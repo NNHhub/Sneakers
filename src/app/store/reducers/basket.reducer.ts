@@ -19,11 +19,22 @@ export const basketReducer = createReducer(
 
   on(basketActions.addBasketItemSuccess, (state,{ item })=> ({
     ...state,
-    basket: state.basket ? [...state.basket, item] : [item]
+    basket: state.basket ? [...state.basket?.filter( val => !(val.id == item.id && val.size == item.size) ), item] : [item]
   })),
 
-  on(basketActions.deleteBasketItemSuccess, (state,{ id })=> ({
+  on(basketActions.updateBasketItemSuccess, (state,{ item })=> ({
     ...state,
-    basket: state.basket?.filter( item => item.id !== id ) as ISneakers[]
+    basket: state.basket?.map((value)=> {
+      if(value.id === item.id && value.size === item.size){
+        return item;
+      } else {
+        return value;
+      }
+    }) as ISneakers[]
+  })),
+
+  on(basketActions.deleteBasketItemSuccess, (state,{ id, size })=> ({
+    ...state,
+    basket: state.basket?.filter( item => !(item.id == id && item.size == size) ) as ISneakers[]
   })),
 )

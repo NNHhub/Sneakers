@@ -8,11 +8,6 @@
             <div class="sneakers-card" *ngFor="let list of (displayedSneakers$|async); let i = index">
                 <img id="selected-image" [src]="'http://localhost:3000/' + list.main_picture" alt="Selected Image" decoding="async">
                 <a class="details-button" [routerLink]="['/details',list.id]">View More</a>
-                @if(basketIds.includes(list.id)){
-                    <button class="favorites" (click)="changeFavorite(list.id)"><mat-icon class="icon">favorite</mat-icon></button>   
-                }@else{
-                    <button class="favorites" (click)="changeFavorite(list.id)"><mat-icon class="icon">favorite_border</mat-icon></button>
-                }
                 <p>{{list.name}}, {{list.color_name}}</p>
                 <p>{{list.price}} $</p>
             </div>
