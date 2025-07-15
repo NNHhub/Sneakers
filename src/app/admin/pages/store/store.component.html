@@ -1,0 +1,112 @@
+<section *ngIf="(sneakers$|async) as sneakers">
+    
+    <div class="search-content" *ngIf="(suggested$ | async) as suggested">
+        <mat-autocomplete #auto="matAutocomplete" >
+            @for( option of suggested|searchStore:searchControl.value; track option){
+                <mat-option [value]="option"> {{ option }} </mat-option>
+            }   
+        </mat-autocomplete>
+        <input #inputSearch [formControl]="searchControl" id="search" type="search" [matAutocomplete]="auto">
+        <button class="search-button" (click)="search()">Search</button>
+    </div>
+    
+    <ng-container *ngIf="isEditingCard">
+        <div class="change-section">
+            <div class="adding-block">
+                <form [formGroup]="sneakersUpdate">
+                    <mat-form-field class="input-block">
+                        <mat-label>Name of sneaker:</mat-label>
+                        <input type="text" matInput formControlName="name">
+                    </mat-form-field>
+
+                    <mat-form-field class="textarea-block">
+                        <mat-label>Sneaker description:</mat-label>
+                        <textarea matInput formControlName="description"></textarea>
+                    </mat-form-field>
+        
+                    <button  id="save-button" type="button" mat-raised-button (click)="updateSneaker()">Update sneaker</button>
+                    <div class="color-price-sizes">
+
+                        <div class="color-price">
+                            <mat-form-field class="input-block">
+                                <mat-label>Color:</mat-label>
+                                <input type="text" matInput formControlName="color">
+                            </mat-form-field>
+        
+                            <mat-form-field class="input-block">
+                                <mat-label>Price:</mat-label>
+                                <input currencyMask [options]="{ align: 'left', allowNegative: false, allowZero: true, prefix: '$ ', thousands: '.', decimal: ',' }" matInput formControlName="price" >
+                            </mat-form-field>
+                        </div>
+
+                        
+                        <div class="sizes-section">
+                            <button *ngIf="isEditingSizes" class="close-button" (click)="closeSize()"><mat-icon>close</mat-icon></button>
+                            <h2>Sizes</h2>
+                            <mat-form-field class="input-block" *ngIf="isEditingSizes">
+                                <mat-label>Count of editing size:</mat-label>
+                                <input matInput [formControl]="sizeControl" >
+                            </mat-form-field>
+                            <button *ngIf="isEditingSizes" class="save-sizes-button" (click)="saveCountSize()">Save count</button>
+                            <div class="sizes-block" >
+                                <div [ngClass]="(activeSize$|async) === size ? 'active-size-bttn': 'disabled-size-bttn'" *ngFor="let size of sizes">
+                                    <button class="size-button" (click)="editSize(size)">
+                                        {{ size }}
+                                    </button>    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+
+                    <div class="picture-adding">
+
+                        <div class="picture-block">
+                            <h2 >Select main picture</h2>
+                            <article class="main-add-block">
+
+                                <button *ngIf="!sneakersUpdate.get('mainPic')?.value" id="add-button" type="button" mat-raised-button (click)="mainFileInput.click()"><mat-icon>add</mat-icon></button>
+                                <input hidden (change)="onMainFileSelected($event)" #mainFileInput type="file" accept="image/*">
+                                <img id="selected-image" *ngIf="sneakersUpdate.get('mainPic')?.value" [src]="sneakersUpdate.get('mainPic')?.value" alt="Selected Image" >
+                                <button *ngIf="sneakersUpdate.get('mainPic')?.value" id="delete-button"  (click)="deleteMainImg()"><mat-icon>close</mat-icon></button>
+                            
+                            </article>
+                        </div>
+
+                        <div class="picture-block">
+                            <h2>Select additional pictures</h2>
+                            <article class="add-block" *ngIf="sneakersUpdate.get('addPic')?.value">
+
+                                <div class="little-add-block" *ngFor="let image of sneakersUpdate.get('addPic')?.value; let addIndex = index">
+                                    <img id="selected-image" [src]="image" alt="Selected Image" >
+                                    <button id="delete-button"  (click)="deleteAddImg(addIndex)"><mat-icon>close</mat-icon></button>
+                                </div>
+
+                                <div class="little-add-block" *ngIf="sneakersUpdate.get('addPic')?.value.length!==10">
+                                    <button id="little-add-button" type="button" mat-raised-button (click)="addFileInput.click()"><mat-icon>add</mat-icon></button>
+                                    <input hidden (change)="onAddFileSelected($event)" #addFileInput type="file" accept="image/*"> 
+                                </div>
+
+                            </article>
+                        </div>
+                    </div> 
+                    
+                </form>    
+            </div>
+        </div>
+
+    </ng-container>
+    
+    <div class="displayed-items">
+        <div class="sneakers-card" *ngFor="let list of (displayedSneakers$|async); let i = index">
+            @if(!isEditingCard || (list.id !== editingId)){
+                <button class="edit" (click)="editSneakerCard(list.id)"><mat-icon class="icon">edit</mat-icon></button> 
+            }
+            <img id="card-image" [src]="'http://localhost:3000/' + list.main_picture" alt="Selected Image" decoding="async">
+            <p>{{list.name}}, {{list.color_name}}</p>
+            <p>{{list.price}} $</p>
+        </div>
+    </div>
+    <app-pagination (paginationCurrPage)="getCurrPage($event)" [inputPaginationSettings]="settings"></app-pagination>
+</section>

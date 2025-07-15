@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IProfile } from './models/profile.model';
+import { IProfile } from '../models/profile.model';
 
 @Injectable({
   providedIn: 'root'

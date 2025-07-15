@@ -1,0 +1,59 @@
+.carousel-container { 
+    overflow: hidden; 
+    width: 100%;
+    height: 100%;
+}
+
+.carousel {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    border: 2px solid black;
+}
+
+.carousel:has(.vertical){
+    flex-direction: column;
+    overflow-y: auto; 
+    scroll-snap-type: y mandatory;
+}
+
+.carousel:has(.horizontal){
+    overflow-x: auto; 
+    scroll-snap-type: x mandatory;
+}
+
+.horizontal{
+    flex: 0 0 auto;
+    height: 100%;
+    width: 25%;
+    scroll-snap-align: start; 
+    transition: transform 0.5s ease;
+    border: 2px solid transparent;
+    outline: 2px solid black;
+}
+
+.vertical{
+    height: 25%;
+    scroll-snap-align: start; 
+    transition: transform 0.5s ease;
+    border: 2px solid transparent;
+    outline: 2px solid black;
+}
+.horizontal:hover, .vertical:hover{
+    cursor: pointer;
+    border: 2px solid black;
+}
+
+img{
+    display: block;
+    height: 100%;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+.carousel::-webkit-scrollbar { 
+    display: none; 
+}

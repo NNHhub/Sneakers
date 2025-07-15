@@ -1,0 +1,11 @@
+<div class="popular-listing" >
+
+    <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+        @for (slide of popular$|async; track slide.main_picture) {
+            <div  ngxSlickItem class="slide">
+                <img class="carousel-img" [src]="'http://localhost:3000/' + slide.main_picture" alt="" width="100%">
+            </div>
+        }
+    </ngx-slick-carousel>
+
+</div>

@@ -1,0 +1,55 @@
+.admin-content{
+    display: grid;
+    min-height: 100vh;
+    grid-template-columns: 0.2fr 1fr;
+}
+
+.admin-menu{
+    background-color: #fcf4d0;
+}
+nav{
+    flex:1;
+}
+
+a{
+    text-decoration: none;
+    color:inherit;
+}
+
+.navigation-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    list-style: none;
+}
+
+.navigation-list li{
+    position: relative;
+    margin-top: 20px;
+    font-size: 24px;
+}
+
+.disable-nav::before{
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+    width: 0;
+    height: 3px;
+    background-color: #181717;
+    transition: width 0.3s ease, left 0.3s ease;
+}
+.disable-nav:hover::before{
+    width:100%;
+    left: 0;
+}
+
+.navigation-list li:hover{
+    cursor: pointer;
+}
+
+.active-nav{
+    color:#925239fb;
+    cursor:default;
+}

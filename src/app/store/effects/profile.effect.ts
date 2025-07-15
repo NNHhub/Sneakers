@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import * as profileActions from '../actions/profile.action';
 import { of } from 'rxjs'; 
-import { ProfileService } from 'app/profile/profile.service';
+import { ProfileService } from 'app/profile/services/profile.service';
 
 @Injectable()
 
@@ -19,7 +19,11 @@ export class ProfileEffects {
             console.log('Profile has been gotten seccesessfuly');
             return profileActions.getProfileSuccess({profile});
           }),
-        catchError(error => of(profileActions.getProfileFailure({ error })))
+        catchError(error => {
+          localStorage.removeItem('token');
+          location.reload();
+          return of(profileActions.getProfileFailure({ error }));
+        })
         )
       )
     )

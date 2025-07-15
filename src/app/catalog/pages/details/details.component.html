@@ -1,0 +1,58 @@
+<section class="details">
+    <div class = "content-block">
+        <div class="picture-block" *ngIf="(activatedPicture$|async) as activatedPicture">
+            <div class="roll-pic" *ngIf="activatedPicture.pictures as pictures">
+                <div class="all-picture-column" >
+                    <app-carousel [content]="pictures" (itemHovered)="handleItemHovered($event)"></app-carousel>
+                </div>
+                
+            </div>
+
+            <div id="main-picture-view" >
+                <img id="main-img" [src]="'http://localhost:3000/' + hoveredItem" [alt]="activatedPicture.color_name">
+            </div>
+            
+        </div>
+        <div class="info-block" *ngIf="(sneakers$|async) as sneakers">
+            <h1>{{ sneakers[activeIndex].name }}</h1>
+            <h2>{{ sneakers[activeIndex].color_name }}</h2>
+            <p>{{ sneakers[activeIndex].price }}$</p>
+
+            @if(sneakers[activeIndex].sizes){
+                <div class="sizes-block" > 
+                    <div [ngClass]="{
+                        'active-size-bttn': (activeSize$|async) === size && sizeExist(size),
+                        'exist': sizeExist(size),
+                        'disabled-size-bttn': (activeSize$|async) !== size || !sizeExist(size)
+                        }" 
+                        *ngFor="let size of sizes">
+                        <button class="size-button" (click)="changeSize(size)" [disabled]="!sizeExist(size)">
+                            {{ size }}
+                        </button>    
+                    </div>
+                </div>
+                <p *ngIf="activeSizeCount$|async"> {{ activeSizeCount$|async }} left</p>
+
+                <div class="adding-block" *ngIf="activeIndex !== null && activeSizeSubj.getValue()">
+                    <button class="change-value-button" (click)="decrement()">-</button>
+                    <input class="sneaker-count" [formControl]="sneakerCount" readonly> 
+                    <button class="change-value-button" (click)="increment()">+</button>  
+                    <button class="save-basket-button" (click)="saveToBasket(sneakers[activeIndex])">Add to basket</button>
+                </div>
+
+            } @else {
+                <h2 style="color:red;">There is no current item in stock.</h2>
+            }
+
+            <div class="colors-block" > 
+                <div [ngClass]="sneaksId === sneaker.id ? 'active-color-pictures':'disabled-color-pictures'" *ngFor="let sneaker of sneakers">
+                    <button class="color-button" (click)="changeColor(sneaker.id)" [disabled]="sneaksId === sneaker.id">
+                        <img class="color-img" [src]="'http://localhost:3000/' + sneaker.main_picture" [alt]="sneaker.color_name">
+                    </button>    
+                </div>
+            </div>
+            <p>{{ sneakers[activeIndex].description }}</p>
+        </div>
+        
+    </div>    
+</section>

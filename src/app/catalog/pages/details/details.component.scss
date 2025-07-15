@@ -1,0 +1,188 @@
+h1{
+    font-style: italic;
+    word-spacing: 6px;
+    font-weight: 500;
+}
+
+.details{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-block{
+    display: flex;
+    width: 80%;
+    position: relative;
+}
+
+.info-block {
+    display: flex;
+    margin-top: 50px;
+    padding-left: 50px;
+    flex-direction: column;
+}
+
+.info-block h1,.info-block h2,.info-block p{
+    font-style: italic;
+    word-spacing: 6px;
+    padding-bottom: 15px;
+    margin: 0px;
+}
+
+.info-block p{
+    font-style: italic;
+    font-size: 16px;
+    font-weight: 600;
+    word-spacing: 6px;
+    
+}
+
+.picture-block{
+    position: relative;
+    display: flex;
+    align-self: stretch;
+    gap: 10px;
+    margin-top: 50px;
+}
+
+#main-picture-view{
+    max-height: 100%;
+    overflow: hidden;
+}
+
+#main-img{
+   height: 475px;
+   width: 375px;
+}
+
+.roll-pic{
+    display: flex;
+    flex-direction: column;
+    height: 475px;
+}
+
+.all-picture-column{
+    height: 100%;
+    overflow: hidden;
+}
+
+
+.colors-block, .sizes-block{
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(4, minmax(65px, max-content));
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.disabled-color-pictures {
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 65px;
+    height: 85px;
+    overflow: hidden;
+}
+.disabled-size-bttn {
+    border: 1px solid black;
+    text-align: center;
+    font-size: 42px;
+    font-weight: 600;
+    justify-items: center;
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.active-color-pictures {
+    border: 3px solid rgb(3, 2, 71);
+    border-radius: 5px;
+    width: 65px;
+    height: 85px;
+    overflow: hidden;
+}
+
+.active-size-bttn {
+    border: 3px solid rgb(3, 2, 71);
+    text-align: center;
+    font-size: 42px;
+    font-weight: 600;
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.color-img{
+    max-width: 65px;
+}
+
+.color-button, .size-button{
+    border: none;
+    height: 100%;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.adding-block{
+    margin-bottom: 10px;
+}
+
+.sneaker-count{
+    border: none;
+    text-align: center;
+    pointer-events: none;
+    font-size: 14px;
+    background-color: white;
+    width: 35px;
+    height: 35px;
+    margin-right: 3px;
+}
+
+.change-value-button{
+    width: 25px;
+    height: 25px;
+    border-color: #ebe4c0;
+    font-weight: 600;
+    border-radius: 8px;
+    margin-right: 3px;
+    background-color: #ebe4c0;
+}
+
+.save-basket-button{
+    position: relative;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 20px;
+    background:  #ebe4c0;
+    border-color: #ebe4c0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.change-value-button:hover{
+    cursor:pointer;
+    background-color: #cfc9a7;
+}
+
+
+.disabled-color-pictures:hover, .exist:hover{
+    border: 3px solid rgb(127, 136, 6);  
+}
+
+.disabled-color-pictures:hover .color-button, .exist:hover .size-button{
+    cursor: pointer;
+}
+
+img{
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+

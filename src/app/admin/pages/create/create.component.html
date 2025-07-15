@@ -1,0 +1,67 @@
+<section>
+    <div class="first-adding">
+
+        <mat-form-field class="input-block">
+            <mat-label>Name of sneaker:</mat-label>
+            <input type="text" matInput [formControl]="sneakName">
+        </mat-form-field>
+
+        <mat-form-field class="textarea-block">
+            <mat-label>Sneaker description:</mat-label>
+            <textarea matInput [formControl]="sneakDescription"></textarea>
+        </mat-form-field>
+
+        <form [formGroup]="sneakersAdd">
+            <div formArrayName="variants">
+                <button  id="save-button" type="button" mat-raised-button (click)="createSneaker()">Create sneaker</button>
+                <div class="variant-block" *ngFor="let colorGroup of variants.controls; let variantIndex = index" [formGroupName]="variantIndex">
+                    <div class="variant-line" *ngIf="variantIndex>0"></div>  
+                    <button *ngIf="variantIndex>0" id="delete-button"  (click)="deleteColorGroup(variantIndex)"><mat-icon>close</mat-icon></button>
+                        <mat-form-field class="input-block">
+                            <mat-label>Color:</mat-label>
+                            <input type="text" matInput formControlName="color">
+                        </mat-form-field>
+
+                        <mat-form-field class="input-block">
+                            <mat-label>Price:</mat-label>
+                            <input currencyMask [options]="{ align: 'left', allowNegative: false, allowZero: true, prefix: '$ ', thousands: '.', decimal: ',' }" matInput formControlName="price" >
+                        </mat-form-field>
+
+                    <div class="picture-adding">
+
+                        <div class="picture-block">
+                            <h2 >Select main picture</h2>
+                            <article class="main-add-block">
+
+                                <button *ngIf="!variants.at(variantIndex).get('mainPic')?.value" id="add-button" type="button" mat-raised-button (click)="mainFileInput.click()"><mat-icon>add</mat-icon></button>
+                                <input hidden (change)="onMainFileSelected($event,variantIndex)" #mainFileInput type="file" accept="image/*">
+                                <img id="selected-image" *ngIf="variants.at(variantIndex).get('mainPic')?.value" [src]="variants.at(variantIndex).get('mainPic')?.value" alt="Selected Image" >
+                                <button *ngIf="variants.at(variantIndex).get('mainPic')?.value" id="delete-button"  (click)="deleteMainImg(variantIndex)"><mat-icon>close</mat-icon></button>
+                            
+                            </article>
+                        </div>
+
+                        <div class="picture-block">
+                            <h2>Select additional pictures</h2>
+                            <article class="add-block" *ngIf="variants.at(variantIndex).get('addPic')?.value">
+
+                                <div class="little-add-block" *ngFor="let image of variants.at(variantIndex).get('addPic')?.value; let addIndex = index">
+                                    <img id="selected-image" [src]="image" alt="Selected Image" >
+                                    <button id="delete-button"  (click)="deleteAddImg(variantIndex,addIndex)"><mat-icon>close</mat-icon></button>
+                                </div>
+
+                                <div class="little-add-block" *ngIf="variants.at(variantIndex).get('addPic')?.value.length!==10">
+                                    <button id="little-add-button" type="button" mat-raised-button (click)="addFileInput.click()"><mat-icon>add</mat-icon></button>
+                                    <input hidden (change)="onAddFileSelected($event,variantIndex)" #addFileInput type="file" accept="image/*"> 
+                                </div>
+
+                            </article>
+                        </div>
+
+                    </div>   
+                </div>
+                <button  id="color-button" type="button" mat-raised-button (click)="addColor()">Add more color</button>
+            </div>
+        </form>    
+    </div>
+</section>
