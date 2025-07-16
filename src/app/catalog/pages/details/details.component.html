@@ -54,5 +54,9 @@
             <p>{{ sneakers[activeIndex].description }}</p>
         </div>
         
-    </div>    
+    </div>
+
+    <div *ngIf="showMessage$|async" class="success-message">
+        ✅ Item added to your basket!
+    </div>   
 </section>
