@@ -188,6 +188,16 @@
     background-color: #cfc9a7;
 }
 
+.no-items-class{
+    width: 45%;
+    min-height: 100%;
+    display: flex;
+    background-color: #f8f8f6;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
 h3{
     font-weight: 500;
     font-size: 20px;

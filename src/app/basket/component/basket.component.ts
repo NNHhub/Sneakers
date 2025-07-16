@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { basketSelector } from 'app/store/selectors/basket.selector';
-import { deleteBasketItem, getBasket, updateBasketItem } from 'app/store/actions/basket.action';
+import { deleteBasketItem, deleteBasketItemSuccess, getBasket, updateBasketItem } from 'app/store/actions/basket.action';
 import { MatIconModule } from '@angular/material/icon';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -160,6 +160,9 @@ export class BasketComponent {
     this.basketService.buyItems(this.basketSubj.getValue()).subscribe({
       next:(value)=>{
         console.log('All done!', value);
+        this.basketSubj.getValue().forEach((value)=>{
+          this.store.dispatch(deleteBasketItemSuccess({id:value.id,size:value.size as number}));
+        })
       },
       error:(error)=>{
         console.log('Can not buy items', error);
