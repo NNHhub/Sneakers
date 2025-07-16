@@ -21,6 +21,8 @@ export class DetailsComponent implements AfterViewInit{
   hoveredItem: string = '';
   sneaksId!:number;
   activeIndex!:number;
+  showMessageSbj = new BehaviorSubject<boolean>(false);
+  showMessage$:Observable<boolean> = this.showMessageSbj.asObservable();
 
   activeSizeSubj = new BehaviorSubject<number|null>(null);
   activeSize$: Observable<number|null> = this.activeSizeSubj.asObservable();
@@ -106,6 +108,14 @@ export class DetailsComponent implements AfterViewInit{
   saveToBasket(item:ISneakers){
     const newItem = {...item,size:this.activeSizeSubj.getValue() as number,count:this.sneakerCount.value as number}
     this.store.dispatch(addBasketItem({ item:newItem }));
+    this.triggerSuccessMessage();
+  }
+
+  triggerSuccessMessage() {
+    this.showMessageSbj.next(true);
+    setTimeout(() => {
+      this.showMessageSbj.next(false);
+    }, 1000); 
   }
 
 }
