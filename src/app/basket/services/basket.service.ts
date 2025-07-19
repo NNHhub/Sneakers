@@ -9,7 +9,7 @@ export class BasketService {
   private API_URL = 'http://localhost:3000/basket';
 
   constructor(private http: HttpClient) {}
-
+  // change set to see if item exist
   setBasket(id: number, size: number, count: number){
     const body = { color_id : id, size: size, count: count };
     return this.http.post<number>(`${this.API_URL}/setBasket`, body);
@@ -33,4 +33,5 @@ export class BasketService {
     const body = { items: items };
     return this.http.post(`${this.API_URL}/buyItemsInBasket`, body);
   }
+  
 }
