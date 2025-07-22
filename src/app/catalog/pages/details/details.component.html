@@ -56,7 +56,17 @@
         
     </div>
 
-    <div *ngIf="showMessage$|async" class="success-message">
+    <div *ngIf="showSuccessMessage$|async" class="success-message">
         ✅ Item added to your basket!
-    </div>   
+    </div>
+    
+    <div *ngIf="showFailureMessage$|async" class="failure-message">
+        <button class="close-failure-button" (click)="closeFailureMessage()"><mat-icon class="icon">close</mat-icon></button> 
+        <p>To add item to your basket need to Sign in</p>
+        <div class="button-failure-block">
+            <button class="failure-basket-button" [routerLink]="['/signin']">Sign in</button>
+            <button class="failure-basket-button" [routerLink]="['/signup']">Sign up</button>
+        </div>
+        
+    </div> 
 </section>

@@ -177,6 +177,52 @@ h1{
   z-index: 1000;
 }
 
+.failure-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background:  #e4e3dd;
+  padding: 20px 30px;
+  border-radius: 8px;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.button-failure-block{
+    width: 100%;
+    display: flex;
+
+    justify-content: center;
+}
+
+.failure-basket-button{
+    position: relative;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 20px;
+    background:  #ebe4c0;
+    border-color: #ebe4c0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.close-failure-button{
+    position: absolute;
+    right: 2px;
+    top:2px;
+    height: 23px;
+    border: none;
+    background-color: inherit;
+}
+
+.close-failure-button:hover{
+    cursor: pointer;
+    color:#c2bc9a;
+}
+
 .change-value-button:hover{
     cursor:pointer;
     background-color: #cfc9a7;
