@@ -1,18 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ISneakers } from 'app/catalog/model/sneaker.model';
 import { CatalogService } from 'app/catalog/services/catalog.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CarouselComponent } from "../../carousel/carousel.component";
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { addBasketItem } from 'app/store/actions/basket.action';
+import { addBasketItem, getBasket } from 'app/store/actions/basket.action';
+import { MatIconModule } from '@angular/material/icon';
+import { basketSelector } from 'app/store/selectors/basket.selector';
 
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [CommonModule, CarouselComponent, ReactiveFormsModule],
+  imports: [CommonModule, CarouselComponent, ReactiveFormsModule, RouterModule, MatIconModule],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss'
 })
@@ -21,8 +23,12 @@ export class DetailsComponent implements AfterViewInit{
   hoveredItem: string = '';
   sneaksId!:number;
   activeIndex!:number;
-  showMessageSbj = new BehaviorSubject<boolean>(false);
-  showMessage$:Observable<boolean> = this.showMessageSbj.asObservable();
+
+  showSuccessMessageSbj = new BehaviorSubject<boolean>(false);
+  showSuccessMessage$:Observable<boolean> = this.showSuccessMessageSbj.asObservable();
+
+  showFailureMessageSbj = new BehaviorSubject<boolean>(false);
+  showFailureMessage$:Observable<boolean> = this.showFailureMessageSbj.asObservable();
 
   activeSizeSubj = new BehaviorSubject<number|null>(null);
   activeSize$: Observable<number|null> = this.activeSizeSubj.asObservable();
@@ -35,13 +41,25 @@ export class DetailsComponent implements AfterViewInit{
 
   sneakersSubj = new BehaviorSubject<ISneakers[]|null>(null);
   sneakers$ : Observable<ISneakers[]|null> = this.sneakersSubj.asObservable();
+
+  basketSubj = new BehaviorSubject<ISneakers[]|null>(null);
+  basket$: Observable<ISneakers[]|null> = this.store.select(basketSelector);
   
   sizes = Array.from({ length: 48 - 35 + 1 }, (_, i) => 35 + i);
   constructor(
     private route:ActivatedRoute, 
     private catalogService:CatalogService, 
     private router:Router,
-    private store:Store){}
+    private store:Store){
+      this.basket$.subscribe({
+        next:(value) => {
+          this.basketSubj.next(value);
+        },
+        error:(error) => {
+          console.log('Something went wrong, when trying to load basket', error);
+        }
+      })
+    }
 
   ngAfterViewInit(): void {
     this.route.params.subscribe(params => {
@@ -69,6 +87,8 @@ export class DetailsComponent implements AfterViewInit{
         }
       }
     })
+
+    this.store.dispatch(getBasket());
   }
   
   changeColor(id:number){
@@ -106,16 +126,38 @@ export class DetailsComponent implements AfterViewInit{
   }
 
   saveToBasket(item:ISneakers){
-    const newItem = {...item,size:this.activeSizeSubj.getValue() as number,count:this.sneakerCount.value as number}
-    this.store.dispatch(addBasketItem({ item:newItem }));
-    this.triggerSuccessMessage();
+    const auth = localStorage.getItem('token');
+    const basketExist = (this.basketSubj.getValue() as ISneakers[]).find(sneaker => (sneaker.id == this.sneaksId && sneaker.size == this.activeSizeSubj.getValue()));
+    let count = this.sneakerCount.value as number;
+    const countCheck = basketExist?.sizes?.find(sneak => sneak.size == this.activeSizeSubj.getValue())?.count as number;
+    if(auth){
+
+      if(basketExist){
+        if(countCheck < (basketExist.count as number) + count){
+          count = countCheck;
+        } else {
+          count = (basketExist.count as number) + count;
+        }
+      }
+
+      const newItem = {...item,size:this.activeSizeSubj.getValue() as number,count:count };
+      this.store.dispatch(addBasketItem({ item:newItem }));
+      this.triggerSuccessMessage();
+    } else {
+      this.showFailureMessageSbj.next(true);
+    }
+    
   }
 
   triggerSuccessMessage() {
-    this.showMessageSbj.next(true);
+    this.showSuccessMessageSbj.next(true);
     setTimeout(() => {
-      this.showMessageSbj.next(false);
+      this.showSuccessMessageSbj.next(false);
     }, 1000); 
+  }
+
+  closeFailureMessage() {
+    this.showFailureMessageSbj.next(false);
   }
 
 }
