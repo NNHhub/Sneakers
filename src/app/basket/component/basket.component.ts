@@ -28,6 +28,8 @@ import { BasketService } from '../services/basket.service';
   styleUrl: './basket.component.scss'
 })
 export class BasketComponent {
+  showMessageSbj = new BehaviorSubject<boolean> (false);
+  showMessage$:Observable<boolean> = this.showMessageSbj.asObservable();
 
   basketForm:FormGroup = this.fb.group({
     firstName: [
@@ -163,10 +165,19 @@ export class BasketComponent {
         this.basketSubj.getValue().forEach((value)=>{
           this.store.dispatch(deleteBasketItemSuccess({id:value.id,size:value.size as number}));
         })
+        this.triggerSuccessMessage();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       },
       error:(error)=>{
         console.log('Can not buy items', error);
       }
     });
+  }
+
+  triggerSuccessMessage() {
+    this.showMessageSbj.next(true);
+    setTimeout(() => {
+      this.showMessageSbj.next(false);
+    }, 1000); 
   }
 }
