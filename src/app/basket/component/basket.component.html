@@ -66,18 +66,26 @@
         @if((basket$|async)?.length){
             <div class="basket-items" >  
                 <div class="basket-card" *ngFor="let list of (basket$|async); let i = index" [formGroup]="basketGroup"> 
-                    <img id="selected-image" [src]="'http://localhost:3000/' + list.main_picture" alt="Selected Image" decoding="async">
-                    <div>
+                    <div class="card-image">
+                       <img id="selected-image" [src]="'http://localhost:3000/' + list.main_picture" alt="Selected Image" decoding="async">
+                    </div>
+
+                    <div class="card-text-block">
+                        <div class="naming-block">
                         <a class="item-name" [routerLink]="['/details',list.id]"><p>{{list.name}}</p></a>
                         <p>{{list.price}} $</p>
                         <p>size {{list.size}} </p>
+                        </div>
+
+                        <div class="error-block">{{errorMassage[i]}}</div>
+                        
+                        <div class="adding-block" formArrayName="counts">
+                            <button class="change-value-button" (click)="decrement(i,list.size)">-</button>
+                            <input name="count" class="sneaker-count" [value]="basketGroup.get('counts')!.value[i]" readonly> 
+                            <button class="change-value-button" (click)="increment(i,list.size)">+</button>  
+                        </div>
                     </div>
-                    <div class="error-block">{{errorMassage[i]}}</div>
-                    <div class="adding-block" formArrayName="counts">
-                        <button class="change-value-button" (click)="decrement(i,list.size)">-</button>
-                        <input name="count" class="sneaker-count" [value]="basketGroup.get('counts')!.value[i]" readonly> 
-                        <button class="change-value-button" (click)="increment(i,list.size)">+</button>  
-                    </div>
+                    
                     <button class="delete-button" (click)="deleteItem(list.id, list.size)"><mat-icon class="icon">close</mat-icon></button> 
                 </div>
                 <div class="total-cost">
