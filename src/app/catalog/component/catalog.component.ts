@@ -64,8 +64,11 @@ export class CatalogComponent implements AfterViewInit{
         this.store.dispatch(getCatalog());
       }   
     })
-// if user not authorized don't ask for a basket
-    this.store.dispatch(getBasket());
+
+    if(localStorage.getItem('token')){
+      this.store.dispatch(getBasket());
+    } 
+    
   }
 
   ngAfterViewInit(): void {
