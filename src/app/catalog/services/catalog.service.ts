@@ -29,17 +29,17 @@ export class CatalogService {
 
   constructor(private http: HttpClient) {}
 
-  getCatalogData(pageToken?:number) {
-    return this.http.get<SneakersResponse>(`${this.API_URL}/getSneaker?limit=20${pageToken ? `&pageToken=${pageToken}` : ''}`);
+  getCatalogData(pageToken?:number, sort?:string) {
+    return this.http.get<SneakersResponse>(`${this.API_URL}/getSneaker?limit=20&${sort ? `&sortBy=${encodeURIComponent(sort)}` : ''}${pageToken ? `&pageToken=${pageToken}` : ''}`);
   }
 
   getSneakerById(id:number){
     return this.http.get<ISneakers[]>(`${this.API_URL}/getSneaker/${id}`);
   }
 
-  sneakerSearch(value:string, pageToken?:number){
-    const body = {name: value};
-    return this.http.post<SneakersResponse>(`${this.API_URL}/sneakerSearch?limit=20${pageToken ? `&pageToken=${pageToken}` : ''}`,body);
+  sneakerSearch(value:string, pageToken?:number, sort?:string){
+    const body = { name: value };
+    return this.http.post<SneakersResponse>(`${this.API_URL}/sneakerSearch?limit=20&${sort ? `&sortBy=${encodeURIComponent(sort)}` : ''}${pageToken ? `&pageToken=${pageToken}` : ''}`,body);
   }
 
   selectNames (value:string){

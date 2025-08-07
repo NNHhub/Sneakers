@@ -13,8 +13,8 @@ export class CatalogEffects {
   loadCatalog$ = createEffect(() =>
     this.actions$.pipe(
       ofType(catalogActions.getCatalog),
-      switchMap(({pageToken})=>
-        this.catalogService.getCatalogData(pageToken).pipe(
+      switchMap(({pageToken, sort})=>
+        this.catalogService.getCatalogData(pageToken, sort).pipe(
           map((catalog) =>{
             console.log('Catalog has been gotten seccesessfuly');
             this.catalogService.setNextPageToken = catalog.nextPageToken;
@@ -29,8 +29,8 @@ export class CatalogEffects {
   searchInCatalog$ = createEffect(() =>
     this.actions$.pipe(
       ofType(catalogActions.searchInCatalog),
-      switchMap(({value,pageToken})=>
-        this.catalogService.sneakerSearch(value,pageToken).pipe(
+      switchMap(({value, pageToken, sort})=>
+        this.catalogService.sneakerSearch(value, pageToken, sort).pipe(
           map((catalog) =>{
             console.log('Search has been gotten seccesessfuly');
             this.catalogService.setNextPageToken = catalog.nextPageToken;           

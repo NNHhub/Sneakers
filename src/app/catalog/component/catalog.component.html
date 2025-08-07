@@ -1,8 +1,39 @@
-<section *ngIf="(sneakers$|async) as sneakers"> 
-    <div class="search-content">
-        <input #inputSearch id="search" type="search" placeholder="What do you want to find out?">
+<section class="catalog" *ngIf="(sneakers$|async) as sneakers">
+    <h1>CATALOG OF SHOES</h1>
+
+    <div class="gray-line"></div>
+
+    <!--<div class="filters-block" >
+
+    </div>-->
+    <div class="filter-block">
+        <div class="sort-block"> 
+            <div [ngClass]="selected ==='' ? 'sort-label' : 'sort-label active-sort-label'" >Sort By</div>
+            <div class="sort-select">
+                <div class="selected" *ngIf="selected">{{selected}}</div>
+                <ul [ngClass]="sortListActive ? 'sort-list' : 'sort-list not-active-sort-list'">
+                    <li class="sort-option" disabled selected hidden></li>
+                    <li [ngClass]="selected !== 'Price from low to high' ? 'sort-option' : 'active-sort-option'" data-value="from low to high">Price from low to high</li>
+                    <li [ngClass]="selected !== 'Price from high to low' ? 'sort-option' : 'active-sort-option'" data-value="from high to low">Price from high to low</li>
+                </ul>
+                <button class="button-select" (click)="openSelect()">
+                    @if(sortListActive){
+                        <mat-icon>remove icon</mat-icon>
+                    }
+                    @else {
+                        <mat-icon>expand_more</mat-icon>
+                    }
+                </button>
+            </div>
+            
+        </div>
+        <div class="search-content">
+            <input #inputSearch id="search" type="search" placeholder="What do you want to find out?">
+        </div>
     </div>
     
+    <div class="gray-line"></div>
+
     <ng-container *ngIf="sneakers.length>1">
         <div class="catalog-listing" *ngIf="(basketId$|async) as basketIds">
             <div class="sneakers-card" *ngFor="let list of (displayedSneakers$|async); let i = index">

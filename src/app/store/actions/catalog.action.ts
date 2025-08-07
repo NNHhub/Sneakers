@@ -3,12 +3,12 @@ import { ISneakers } from "app/catalog/model/sneaker.model";
 
 export const getCatalog = createAction(
   '[Catalog] Get catalog',
-  (pageToken: number = 0) => ({ pageToken })
+  (pageToken: number = 0, sort:string = '') => ({ pageToken, sort })
 );
 
 export const searchInCatalog = createAction(
   '[Catalog] Search in catalog',
-  ( value:string, pageToken: number = 0) => ({ value, pageToken })
+  ( value:string, pageToken: number = 0, sort:string = '') => ({ value, pageToken, sort  })
 );
 
 export const searchInCatalogSuccess = createAction(

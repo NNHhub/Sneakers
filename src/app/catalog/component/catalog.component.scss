@@ -1,18 +1,119 @@
-
 .catalog-listing{
     width: 90%;
     height: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap:20px;
     padding: 2% 0 2% 15%;
 }
+
+.gray-line {
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    margin: 20px 0;
+}
  
+h1 {
+    font-weight: 700;
+    margin: 30px 30px;
+}
+
+.sort-list {
+    position: absolute;
+    border-radius: 0px 0px  5px 5px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
+    background-color: #ececec;
+    top: 38px;
+    left: 0px;
+    z-index: 1000;
+    width: 176px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.button-select {
+    position:absolute;
+    border: none;
+    background-color: white;
+    font-size: 8px;
+    right:6px;
+    top:6px;
+}
+
+.button-select:hover {
+    cursor: pointer;
+    color: #ccc;
+}
+
+.not-active-sort-list {
+    visibility: hidden;
+}
+
+.sort-block {
+    position: relative;
+    width: 180px;
+    min-height: 40px;
+}
+
+.sort-label {
+    position: absolute;
+    z-index: 1000;
+    font-size: 14px;
+    font-family: "Times New Roman", Times, serif;
+    font-weight: 700;
+    transform: translate(8px, 10px);
+    transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.active-sort-label {
+    transform: translate(2px, -20px);
+}
+
+.selected {
+    position: absolute;
+    z-index: 1000;
+    font-size: 14px;
+    font-family: "Times New Roman", Times, serif;
+    top: 10px;
+    left: 6px;
+}
+
+.sort-select {
+    position: absolute;
+    border: 2px solid rgb(100, 98, 98);
+    border-radius: 5px;
+    height: 40px;
+    width: 180px;
+    top: 0px;
+    left: 0px;
+}
+
+.sort-option {
+    padding: 12px 0px 10px 5px;
+    width: 176px;
+}
+
+.sort-option:hover {
+    cursor: pointer;
+    border-radius: 0px 0px  5px 5px;
+    background-color: #ccc;
+}
+
+.active-sort-option{
+    pointer-events: none;
+    padding: 12px 0px 10px 5px;
+    background-color: #ccc;
+    border-radius: 0px 0px  5px 5px;
+    width: 176px;
+}
+
 
 .no-item-block{
     display: flex;
-    margin: auto 0;
     justify-content: center;
+    align-items: center;
 }
 
 .no-item-block h2{
@@ -21,10 +122,19 @@
     font-size: 24px;
 }
 
+.filter-block {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    padding: 10px 40px;
+    align-items: center;
+}
+
 #search{
     padding: 5px;
     margin: 5px;
     border-radius: 3px;
+    min-width: 250px;
 }
 
 .sneakers-card{
@@ -32,9 +142,8 @@
     flex-direction: column;
     position: relative;
     text-align: center;
-    width: 300px;
-    height: 375px;
-    border: 3px solid black;
+    width: 250px;
+    border: 3px solid #d8d1ad;
     border-radius: 5px;
 }
 
