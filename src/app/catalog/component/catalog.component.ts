@@ -9,10 +9,9 @@ import { PaginationComponent } from "../pagination/pagination.component";
 import { RouterModule } from '@angular/router';
 import { ISneakers } from '../model/sneaker.model';
 import { CatalogService } from '../services/catalog.service';
-
 import { basketIdSelector } from 'app/store/selectors/basket.selector';
-import { addBasketItem, deleteBasketItem, getBasket } from 'app/store/actions/basket.action';
-
+import { getBasket } from 'app/store/actions/basket.action';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-catalog',
@@ -21,17 +20,22 @@ import { addBasketItem, deleteBasketItem, getBasket } from 'app/store/actions/ba
     MatIconModule,
     CommonModule,
     PaginationComponent,
-    RouterModule
+    RouterModule,
+    FormsModule,
+    MatIconModule
 ],
   templateUrl: './catalog.component.html',
   styleUrl: './catalog.component.scss'
 })
 export class CatalogComponent implements AfterViewInit{
   basketId$:Observable<number[]> = this.store.select(basketIdSelector);
-
+  selected:string ='';
+  selectedValue:string ='';
   paginationCurrentPage!: Observable<number>;
   currentPage = new BehaviorSubject<number>(1);
   sneakers$ : Observable<ISneakers[]> = this.store.select(CatalogStoreSelector);
+ 
+  sortListActive:boolean = false;
 
   @ViewChild('inputSearch') inputSearch!: ElementRef<HTMLInputElement>;
   displayedSneakers$!:Observable<ISneakers[]|null>;
@@ -43,19 +47,20 @@ export class CatalogComponent implements AfterViewInit{
     this.displayedSneakers$ = combineLatest([this.sneakers$, this.currentPage]).pipe(
       map(([sneakers, currentPage]) => {
         if (sneakers.length) {
-          const token = this.catalogService.getNextPageToken;
-          if((sneakers.length/15)<currentPage && token){
-            if(this.inputSearch.nativeElement.value){
-              this.store.dispatch(searchInCatalog(this.inputSearch.nativeElement.value,token));
-            } else {
-              this.store.dispatch(getCatalog(token));
-            } 
-          }
-
-          const firstIndex = (currentPage - 1) * this.settings.itemPerPage;
-          const lastIndex = firstIndex + this.settings.itemPerPage;
-          return sneakers.slice(firstIndex, lastIndex);
+        const token = this.catalogService.getNextPageToken;
+        if((sneakers.length/15)<currentPage && token){
+          if(this.inputSearch.nativeElement.value){
+            this.store.dispatch(searchInCatalog(this.inputSearch.nativeElement.value,token,this.selectedValue));
+          } else {
+            this.store.dispatch(getCatalog(token));
+          } 
         }
+      
+        const firstIndex = (currentPage - 1) * this.settings.itemPerPage;
+        const lastIndex = firstIndex + this.settings.itemPerPage;
+        return sneakers.slice(firstIndex, lastIndex);
+        }
+        
         return [];
     }));
 
@@ -68,7 +73,7 @@ export class CatalogComponent implements AfterViewInit{
     if(localStorage.getItem('token')){
       this.store.dispatch(getBasket());
     } 
-    
+  
   }
 
   ngAfterViewInit(): void {
@@ -79,7 +84,7 @@ export class CatalogComponent implements AfterViewInit{
         distinctUntilChanged()).subscribe((searchItem)=>{
           if(searchItem){
             this.store.dispatch(deleteCatalog());
-            this.store.dispatch(searchInCatalog(searchItem));
+            this.store.dispatch(searchInCatalog(searchItem,0,this.selectedValue));
           } else {
             this.store.dispatch(deleteCatalog());
             this.store.dispatch(getCatalog());
@@ -87,6 +92,23 @@ export class CatalogComponent implements AfterViewInit{
         })
     }    
 
+    const select = document.querySelector('.sort-list') as HTMLInputElement;
+    select.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (target.tagName === 'LI') {
+        const selectedText = target.dataset['value'] as string;
+        this.selectedValue = selectedText;
+        this.selected = target.textContent as string;
+        if (this.inputSearch.nativeElement.value) {
+          this.store.dispatch(deleteCatalog());
+          this.store.dispatch(searchInCatalog(this.inputSearch.nativeElement.value,0,this.selectedValue));
+        } else {
+          this.store.dispatch(deleteCatalog());
+          this.store.dispatch(getCatalog(0,selectedText));
+        }
+        this.sortListActive = false;
+      }
+    });
   }
 
   getCurrPage(item: Observable<number>) { 
@@ -94,6 +116,14 @@ export class CatalogComponent implements AfterViewInit{
     this.paginationCurrentPage.subscribe(value=>{
       this.currentPage.next(value);
     });
+  }
+
+  openSelect (){
+    if(this.sortListActive) {
+      this.sortListActive = false;
+    } else {
+      this.sortListActive = true;
+    }
   }
 
 }
