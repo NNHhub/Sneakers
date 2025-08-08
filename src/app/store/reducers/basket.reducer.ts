@@ -19,7 +19,7 @@ export const basketReducer = createReducer(
 
   on(basketActions.addBasketItemSuccess, (state,{ item })=> ({
     ...state,
-    basket: state.basket ? [...state.basket?.filter( val => !(val.id == item.id && val.size == item.size)), {...item, count: (item.count as number) + (state.basket?.find( val => (val.id == item.id && val.size == item.size))?.count as number)}] : [item]
+    basket: state.basket ? [...state.basket?.filter( val => !(val.id == item.id && val.size == item.size)), {...item }] : [item]
   })),
 
   on(basketActions.updateBasketItemSuccess, (state,{ item })=> ({
