@@ -10,6 +10,9 @@
         <div class="sort-block"> 
             <div [ngClass]="selected ==='' ? 'sort-label' : 'sort-label active-sort-label'" >Sort By</div>
             <div class="sort-select">
+                <button class="remove-sort-button" (click)="removeSort()" *ngIf="selected !== ''">
+                    <mat-icon>close</mat-icon>
+                </button>
                 <div class="selected" *ngIf="selected">{{selected}}</div>
                 <ul [ngClass]="sortListActive ? 'sort-list' : 'sort-list not-active-sort-list'">
                     <li class="sort-option" disabled selected hidden></li>

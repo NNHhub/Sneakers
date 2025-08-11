@@ -37,7 +37,6 @@ h1 {
     position:absolute;
     border: none;
     background-color: white;
-    font-size: 8px;
     right:6px;
     top:6px;
 }
@@ -128,6 +127,23 @@ h1 {
     justify-content: space-between;
     padding: 10px 40px;
     align-items: center;
+}
+
+.remove-sort-button {
+    position:absolute;
+    border: none;
+    background-color: inherit;
+    right:0px;
+    top:-20px;
+}
+
+.remove-sort-button mat-icon{
+    font-size: 18px;
+}
+
+.remove-sort-button:hover {
+    cursor: pointer;
+    color: #ccc;
 }
 
 #search{
