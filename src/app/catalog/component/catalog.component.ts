@@ -93,6 +93,7 @@ export class CatalogComponent implements AfterViewInit{
     }    
 
     const select = document.querySelector('.sort-list') as HTMLInputElement;
+
     select.addEventListener('click', (event) => {
       const target = event.target as HTMLElement;
       if (target.tagName === 'LI') {
@@ -124,6 +125,13 @@ export class CatalogComponent implements AfterViewInit{
     } else {
       this.sortListActive = true;
     }
+  }
+
+  removeSort(){
+    this.selectedValue = '';
+    this.selected = '';
+    this.store.dispatch(deleteCatalog());
+    this.store.dispatch(getCatalog());
   }
 
 }
