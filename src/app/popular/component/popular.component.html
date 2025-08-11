@@ -4,7 +4,12 @@
         @for (slide of popular$|async; track slide.main_picture) {
             <div  ngxSlickItem class="slide">
                 <img class="carousel-img" [src]="'http://localhost:3000/' + slide.main_picture" alt="" width="100%">
+                <div class="name-sneaker">
+                    {{slide.name}}, {{slide.price}}$
+                </div>
+                <a class="details-button" [routerLink]="['/details',slide.id]"></a>
             </div>
+            
         }
     </ngx-slick-carousel>
 
