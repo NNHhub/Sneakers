@@ -8,3 +8,27 @@
     max-width: 100%;
     padding-right: 5px;
 }
+
+.slide{
+    position: relative;
+}
+
+.name-sneaker {
+    position: absolute;
+    font-weight: 600;
+    bottom: 10px;
+    left: 20%;
+}
+
+.details-button{
+    position: absolute;
+    text-decoration: none;
+    color: white; 
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    background-color: rgba(0, 0, 0, 0.5); 
+    padding: 55% 49%; 
+    cursor: pointer; 
+    opacity: 0;
+}

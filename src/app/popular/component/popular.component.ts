@@ -6,13 +6,15 @@ import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { PopularSelector } from 'app/store/selectors/popular.selector';
 import { getPopularList } from 'app/store/actions/popular.action';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-popular',
   standalone: true,
   imports: [
     SlickCarouselModule,
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   templateUrl: './popular.component.html',
   styleUrl: './popular.component.scss'
