@@ -28,20 +28,20 @@
     width: 25%;
     scroll-snap-align: start; 
     transition: transform 0.5s ease;
-    border: 2px solid transparent;
-    outline: 2px solid black;
+    border: 1px solid transparent;
+    outline: 1px solid black;
 }
 
 .vertical{
     height: 25%;
     scroll-snap-align: start; 
     transition: transform 0.5s ease;
-    border: 2px solid transparent;
-    outline: 2px solid black;
+    border: 1px solid transparent;
+    outline: 1px solid black;
 }
 .horizontal:hover, .vertical:hover{
     cursor: pointer;
-    border: 2px solid black;
+    border: 1px solid black;
 }
 
 img{
