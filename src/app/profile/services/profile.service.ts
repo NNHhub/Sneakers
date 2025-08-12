@@ -15,7 +15,7 @@ export class ProfileService {
   }
   
   updateProfile(body:{first_name:string, last_name:string, phone: string, email: string}){
-    return this.http.put(`${this.API_URL}/profileUdate`, body);
+    return this.http.put(`${this.API_URL}/profileUpdate`, body);
   }
 
   deleteProfile(password:string){
