@@ -133,12 +133,14 @@ h1 {
     position:absolute;
     border: none;
     background-color: inherit;
-    right:0px;
+    right:8px;
     top:-20px;
 }
 
 .remove-sort-button mat-icon{
     font-size: 18px;
+    height: 17px;
+    width: 17px;
 }
 
 .remove-sort-button:hover {
