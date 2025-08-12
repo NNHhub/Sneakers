@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IProfile } from '../models/profile.model';
+import { ProfileSecurity } from '../models/profile-security';
 
 @Injectable({
   providedIn: 'root'
@@ -10,14 +11,22 @@ export class ProfileService {
   constructor(private http: HttpClient) {}
 
   getProfileData() {
-    return this.http.get<IProfile>(`${this.API_URL}/profile`);
+    return this.http.get<IProfile>(`${this.API_URL}/getProfile`);
   }
   
-  updateProfile(body:{first_name:string, last_name:string, phone: string}){
-    return this.http.put(`${this.API_URL}/user`, body);
+  updateProfile(body:{first_name:string, last_name:string, phone: string, email: string}){
+    return this.http.put(`${this.API_URL}/profileUdate`, body);
   }
 
   deleteProfile(password:string){
-    return this.http.request('DELETE', `${this.API_URL}/users`,{body: { password: password }})
+    return this.http.request('DELETE', `${this.API_URL}/deleteUser`,{body: { password: password }})
+  }
+
+  getProfileSecurity() {
+    return this.http.get<ProfileSecurity>(`${this.API_URL}/getProfileSecurity`);
+  }
+  
+  updateProfileSecurity(body:ProfileSecurity){
+    return this.http.put(`${this.API_URL}/updateUserSecurity`, body);
   }
 }
