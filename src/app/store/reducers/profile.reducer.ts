@@ -12,11 +12,11 @@ export const initialState: ProfileState = {
 
 export const profileReducer = createReducer(
   initialState,
-  on(profileActions.getProfileSuccess, (state,{profile})=> ({
+  on(profileActions.getProfileSuccess, (state,{ profile })=> ({
     ...state,
     profile
   })),
-  on(profileActions.changeProfile, (state,{profile})=> ({
+  on(profileActions.changeProfile, (state,{ profile })=> ({
     ...state,
     profile:{...profile,role:state.profile?.role as string}
   })),

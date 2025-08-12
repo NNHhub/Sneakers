@@ -1,0 +1,132 @@
+.profile{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border-radius: 10px;
+    font-size: 20px;
+    padding: 20px;
+}
+
+.profile-details-line {
+    height: 2px;
+    margin-bottom: 20px;
+    width: 100%;
+    background-color: #ccc;
+}
+
+h1{
+    text-align: center;
+    font-size: 32px;
+}
+
+.snackbar-error {
+    background-color: red;
+    color: white;
+}
+
+.role{
+    position:relative;
+    align-self: flex-end;
+    margin-bottom: 20px;
+    color: #575252;
+}
+
+.profile-change-button{
+    position: absolute;
+    border: none;
+    background-color: inherit;
+    color:blue;
+    right: 10px;
+}
+
+
+.profile-change-button:hover{
+    color:inherit;
+    cursor:pointer;
+}
+
+.form-block{
+    display: flex;
+    flex-direction: column;
+}
+
+.input-block{
+    margin-bottom: 20px;
+}
+
+.input-block label{
+    font-weight: 500;
+    font-size: 22px;
+}
+
+.profile-data{
+    margin-bottom: 20px;
+}
+
+.profile-data h2{
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.profile-data p{
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.input-block div{
+    display: flex;
+    align-items:flex-end;
+}
+
+#phone,#first-name,#last-name, #email{
+    margin-top: 5px;
+    padding-left: 5px;
+    font-weight: 500;
+    font-size: 20px;
+    width: 90%;
+    height:2rem;
+    border:1px solid #e3e1e1;
+    border-radius: 4px 4px 4px 4px;
+}
+
+
+@media (max-width: 480px) and (orientation: portrait) {
+
+    .role{
+        margin-bottom: 10px;
+    }
+
+    .profile-change-button{
+        right: 5px;
+        scale:0.95;
+    }
+}
+
+@media (max-width: 1400px) and (orientation: landscape) {
+    .role{
+        margin-bottom: 15px;
+    }
+
+    .profile-change-button{
+        right: 10px;
+        scale:0.95;
+    }
+
+}
+
+@media (max-width: 680px) and (orientation: landscape) {
+    .role{
+        margin-bottom: 10px;
+    }
+
+    .profile-change-button{
+        right: 10px;
+        scale:0.95;
+    }
+
+}
+
+.alert{
+    color:red;
+    font-size: 0.8rem;
+}
