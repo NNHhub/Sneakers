@@ -12,6 +12,8 @@ import { CreateComponent } from './admin/pages/create/create.component';
 import { StoreComponent } from './admin/pages/store/store.component';
 import { DetailsComponent } from './catalog/pages/details/details.component';
 import { CarouselComponent } from './catalog/carousel/carousel.component';
+import { ProfileDetailsComponent } from './profile/pages/profile-details/profile-details.component';
+import { SecurityComponent } from './profile/pages/security/security.component';
 
 export const routes: Routes = [
     {
@@ -32,7 +34,18 @@ export const routes: Routes = [
     {
         path:'profile',
         component:ProfileComponent,
-        canActivate:[profileGuard]
+        canActivate:[profileGuard],
+        children:[
+            {
+                path:'profile-details',
+                component:ProfileDetailsComponent
+            },
+
+            {
+                path:'security',
+                component:SecurityComponent
+            }
+        ]
     },
 
     {

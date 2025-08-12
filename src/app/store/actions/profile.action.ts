@@ -17,5 +17,5 @@ export const getProfileFailure = createAction(
 
 export const changeProfile = createAction(
   '[Profile] Change profile',
-  props<{ profile:{first_name:string, last_name:string, phone:string} }>()
+  props<{ profile:{first_name:string, last_name:string, phone:string, email:string} }>()
 )

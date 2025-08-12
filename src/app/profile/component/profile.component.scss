@@ -1,163 +1,103 @@
 section{
-    margin-top: 4%;
-    padding-bottom: 4%;
+    display: grid;
+    grid-template-areas: 
+    "menu profile"
+    "menu profile";
+    grid-template-columns: auto 1fr;
+    height: 100vh;
 }
 
-.profile{
-    display: flex;
-    flex-direction: column;
+.menu-block {
+    grid-area: menu;
     position: relative;
-    margin: 0 auto;
-    width: 500px;
-    height: 500px;
-    border: 3px solid #d3c687;
-    border-radius: 10px;
-    font-size: 20px;
+    background-color: #f3f0f0;
+    min-height: 100%;
+    display: flex;
+}
+
+.menu-profile {
     padding: 20px;
 }
 
-h1{
-    text-align: center;
-    font-size: 32px;
+.menu-profile h2{
+    font-style: italic;
+    margin: 0px;
+    font-size: 26px;
+    margin-top: 10px; 
+}
+
+.menu-profile p{
+    font-style: italic;
+    font-size: 16px;
+    color: #949292;    
+}
+
+a{
+    text-decoration: none;
+    color:inherit;
+}
+
+.navigation-list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.navigation-list li{
+    position: relative;
+    margin-top: 20px;
+    font-size: 22px;
+}
+
+.disable-nav:hover{
+    cursor: pointer;
+    color:#d3c687;
+}
+
+.active-nav{
+    color:#925239fb;
+    cursor:default;
+}
+
+mat-icon {
+    font-size: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.separate-profile-line {
+    width: 2px;
+    min-height: 100%;
+    background-color: #ddd6b2;
+}
+
+.profile-block{
+    grid-area: profile;
 }
 
 .buttons{
     position: absolute;
-    width: 100%;
     display: flex;
-    bottom: 30px;
+    flex-direction: column;
+    bottom: 20px;
+    left: 25%;
 }
 
 .logout{
     position: relative;
-    width: 100px;
-    padding: 10px;
     margin:0 auto;
     font-size: 20px;
-    color:white;
-    background: #d3c687;
-    border-color:#d3c687;
-    border-radius: 4px 4px 4px 4px;
-    cursor: pointer;
+    border: none;
 }
 
-.delete{
-    position: relative;
-    padding: 10px;
-    margin:0 auto;
-    font-size: 20px;
-    color:rgb(250, 10, 10);
-    background: #d3c687;
-    border-color:#d3c687;
-    border-radius: 4px 4px 4px 4px;
+.logout:hover {
     cursor: pointer;
+    color:#d3c687;
 }
 
 .snackbar-error {
     background-color: red;
     color: white;
-}
-
-.role{
-    position:relative;
-    align-self: flex-end;
-    margin-bottom: 20px;
-    color: #575252;
-}
-
-.profile-change-button{
-    position: absolute;
-    border: none;
-    background-color: inherit;
-    color:blue;
-    right: 10px;
-}
-
-
-.profile-change-button:hover{
-    color:inherit;
-    cursor:pointer;
-}
-
-.form-block{
-    display: flex;
-    flex-direction: column;
-}
-
-.input-block{
-    margin-bottom: 20px;
-}
-
-.input-block label{
-    font-weight: 500;
-    font-size: 22px;
-}
-
-.profile-data{
-    margin-bottom: 20px;
-}
-
-.profile-data h2{
-    font-size: 22px;
-    margin-bottom: 5px;
-}
-
-.profile-data p{
-    font-size: 20px;
-    margin-bottom: 5px;
-}
-
-.input-block div{
-    display: flex;
-    align-items:flex-end;
-}
-
-#phone,#first-name,#last-name{
-    margin-top: 5px;
-    padding-left: 5px;
-    font-weight: 500;
-    font-size: 20px;
-    width: 90%;
-    height:2rem;
-    border:1px solid #e3e1e1;
-    border-radius: 4px 4px 4px 4px;
-}
-
-
-@media (max-width: 480px) and (orientation: portrait) {
-
-    .role{
-        margin-bottom: 10px;
-    }
-
-    .profile-change-button{
-        right: 5px;
-        scale:0.95;
-    }
-}
-
-@media (max-width: 1400px) and (orientation: landscape) {
-    .role{
-        margin-bottom: 15px;
-    }
-
-    .profile-change-button{
-        right: 10px;
-        scale:0.95;
-    }
-
-}
-
-@media (max-width: 680px) and (orientation: landscape) {
-    .role{
-        margin-bottom: 10px;
-    }
-
-    .profile-change-button{
-        right: 10px;
-        scale:0.95;
-    }
-
 }
 
 .alert{

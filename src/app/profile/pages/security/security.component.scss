@@ -1,0 +1,52 @@
+
+.security-section {
+    position: relative;
+    margin-top: 20px;
+    margin-left: 40px;
+}
+
+.security-list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.security-option{
+    position: relative;
+    font-style: italic;
+    font-size: 20px;
+}
+
+.toogle{
+    position: absolute;
+    right: 20px;
+}
+
+.profile-security-line {
+    height: 2px;
+    margin-bottom: 40px;
+    margin-top: 40px;
+    width: 100%;
+    background-color: #ccc;
+}
+
+mat-icon {
+    font-size: 20px;
+    height: 20px;
+    margin-right: 5px;
+    padding-top: 5px;
+}
+
+.delete{
+    position: absolute;
+    background-color: inherit;
+    border: none;
+    top: 10px;
+    right: 20px;
+    font-size: 20px;
+}
+
+.delete:hover {
+    cursor: pointer;
+    color:rgb(250, 10, 10);
+}
