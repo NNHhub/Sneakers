@@ -1,20 +1,20 @@
 <section class="security-section">
     <button *ngIf="(profile$|async)?.role!=='admin'" class="delete" (click)="deleteUser()"><mat-icon>delete</mat-icon> Delete user </button>
-    <ul class="security-list">
+    <ul class="security-list" *ngIf="security$|async as security">
         <div class="profile-security-line"></div>
 
-        <li class="security-option">Allow to collect personal data <mat-slide-toggle class="toogle" [(ngModel)]="isOn"></mat-slide-toggle></li>
+        <li class="security-option">Allow to collect personal data <mat-slide-toggle class="toogle" [ngModel]="security.collect_data" (ngModelChange)="onModelChange($event,'collect_data')"></mat-slide-toggle></li>
         
         <div class="profile-security-line"></div>
         
-        <li class="security-option">Allow the use of personal data for the operation of the platform <mat-slide-toggle class="toogle" [(ngModel)]="isOn"></mat-slide-toggle></li>
+        <li class="security-option">Allow the use of personal data for the operation of the platform <mat-slide-toggle class="toogle" [ngModel]="security.use_data" (ngModelChange)="onModelChange($event,'use_data')"></mat-slide-toggle></li>
        
         <div class="profile-security-line"></div>
         
-        <li class="security-option">Allow the use cookies <mat-slide-toggle class="toogle" [(ngModel)]="isOn"></mat-slide-toggle></li>
+        <li class="security-option">Allow the use cookies <mat-slide-toggle class="toogle" [ngModel]="security.cookies" (ngModelChange)="onModelChange($event,'cookies')"></mat-slide-toggle></li>
         
         <div class="profile-security-line"></div>
-        <li class="security-option">Allow selection of ads based on user preferences <mat-slide-toggle class="toogle" [(ngModel)]="isOn"></mat-slide-toggle></li>
+        <li class="security-option">Allow selection of ads based on user preferences <mat-slide-toggle class="toogle" [ngModel]="security.ads" (ngModelChange)="onModelChange($event, 'ads')"></mat-slide-toggle></li>
     </ul>
 </section>
 

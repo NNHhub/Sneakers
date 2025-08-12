@@ -5,14 +5,15 @@ import { Router, RouterModule } from '@angular/router';
 import { DeleteConfirmComponent } from 'app/confirmation/delete-confirm.component';
 import { ProfileService } from 'app/profile/services/profile.service';
 import { Store } from '@ngrx/store';
-import { ProfileStoreSelector } from 'app/store/selectors/profile.selector';
-import { getProfile } from 'app/store/actions/profile.action';
+import { ProfileSecurityStoreSelector, ProfileStoreSelector } from 'app/store/selectors/profile.selector';
+import { changeProfileSecurity, getProfile, getProfileSecurity } from 'app/store/actions/profile.action';
 import { BehaviorSubject,Observable,take } from 'rxjs';
 import { IProfile } from 'app/profile/models/profile.model';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
+import { ProfileSecurity } from 'app/profile/models/profile-security';
 
 
 @Component({
@@ -33,19 +34,29 @@ import { FormsModule } from '@angular/forms';
 export class SecurityComponent {
   profileData: BehaviorSubject<IProfile | null> = new BehaviorSubject<IProfile|null>(null);
   profile$:Observable<IProfile|null> = this.profileData.asObservable();
-  isOn:boolean = true;
-  constructor(
-      private router: Router,
-      private dialog: MatDialog,
-      private profileService: ProfileService,
-      private snackBar: MatSnackBar,
-      private store: Store){
 
+  securitySbj: BehaviorSubject<ProfileSecurity | null> = new BehaviorSubject<ProfileSecurity|null>(null);
+  security$:Observable<ProfileSecurity|null> = this.securitySbj.asObservable();
+  
+  constructor(
+    private router: Router,
+    private dialog: MatDialog,
+    private profileService: ProfileService,
+    private snackBar: MatSnackBar,
+    private store: Store){
     this.store.select(ProfileStoreSelector).pipe(take(2)).subscribe(data=>{
       if(!data){
         this.store.dispatch(getProfile());
       }else{
         this.profileData.next(data);
+      }        
+    });
+
+    this.store.select(ProfileSecurityStoreSelector).pipe(take(2)).subscribe(data=>{
+      if(!data){
+        this.store.dispatch(getProfileSecurity());
+      }else{
+        this.securitySbj.next(data);
       }        
     });
   }
@@ -71,5 +82,21 @@ export class SecurityComponent {
         })
       }
     });
+  }
+
+  onModelChange(value: boolean, changed:string) {
+    const newSecurity = {...this.securitySbj.getValue(),[changed]:value};
+    this.securitySbj.next(newSecurity as ProfileSecurity);
+
+    this.store.dispatch(changeProfileSecurity({security:this.securitySbj.getValue() as ProfileSecurity}));
+      this.profileService.updateProfileSecurity(this.securitySbj.getValue() as ProfileSecurity).subscribe({
+        next:()=>{
+          console.log('Profile security changed seccessfuly!');
+        },
+        error:(error)=>{
+          console.log('Failed to change profile security', error);
+        }
+    });
+
   }
 }

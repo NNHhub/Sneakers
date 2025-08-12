@@ -28,4 +28,21 @@ export class ProfileEffects {
       )
     )
   );
+
+  loadProfileSecurity$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(profileActions.getProfileSecurity),
+      switchMap(()=>
+        this.profileService.getProfileSecurity().pipe(
+          map((security) =>{
+            console.log('Profile security has been gotten seccesessfuly');
+            return profileActions.getProfileSecuritySuccess({ security });
+          }),
+        catchError(error => {
+          return of(profileActions.getProfileSecurityFailure({ error }));
+        })
+        )
+      )
+    )
+  );
 }

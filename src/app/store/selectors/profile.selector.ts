@@ -6,3 +6,8 @@ export const ProfileStoreSelector = createSelector(
   featureSelector,
   (state) => state.profile
 );
+
+export const ProfileSecurityStoreSelector = createSelector(
+  featureSelector,
+  (state) => state.security
+);
