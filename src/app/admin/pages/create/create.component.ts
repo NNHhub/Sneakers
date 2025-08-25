@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { FormGroup, FormBuilder, Validators, FormControl, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { NgxCurrencyDirective } from 'ngx-currency';
 import { HttpClient } from '@angular/common/http';
-import { Buffer } from 'buffer';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-create',
@@ -22,7 +22,8 @@ import { Buffer } from 'buffer';
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss'
 })
-export class CreateComponent {
+export class CreateComponent implements OnDestroy{
+  private createSubscription!: Subscription;
   sneakersAdd:FormGroup;
   sneakName = new FormControl('', Validators.required);
   sneakDescription = new FormControl('', Validators.required);
@@ -99,7 +100,7 @@ export class CreateComponent {
 
   createSneaker(){
     const body = {name:this.sneakName.value, description: this.sneakDescription.value, details: this.variants.value};
-    this.http.post('http://localhost:3000/sneakers/create',body).subscribe({
+    this.createSubscription = this.http.post('http://localhost:3000/sneakers/create',body).subscribe({
       next:(val)=>{
         console.log('All good', val);
       },
@@ -109,4 +110,8 @@ export class CreateComponent {
     })
   }
 
+  ngOnDestroy(): void {
+    console.log('destroyed create');
+    this.createSubscription.unsubscribe();
+  }
 }

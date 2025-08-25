@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,7 +12,7 @@ import { CatalogService } from 'app/catalog/services/catalog.service';
 import { deleteAdminStore, getAdminStore } from 'app/store/actions/admin-store.action';
 import { adminStoreSelector } from 'app/store/selectors/admin-store.selector';
 import { NgxCurrencyDirective } from 'ngx-currency';
-import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, fromEvent, map, Observable, take } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, fromEvent, map, Observable, Subscription, take } from 'rxjs';
 import { searchStorePipe } from 'app/admin/pipes/searchStore.pipe';
 
 @Component({
@@ -33,7 +33,8 @@ import { searchStorePipe } from 'app/admin/pipes/searchStore.pipe';
   styleUrl: './store.component.scss'
 })
 
-export class StoreComponent implements AfterViewInit{
+export class StoreComponent implements AfterViewInit, OnDestroy{
+  private subscriptions: Subscription[] = [];
 
   sneakersUpdate:FormGroup;
   searchControl = new FormControl('');
@@ -99,27 +100,28 @@ export class StoreComponent implements AfterViewInit{
 
   ngAfterViewInit(): void {
     if (this.inputSearch) {
-      fromEvent (this.inputSearch.nativeElement,"input").pipe(
-        map((response: Event)=> (response.target as HTMLInputElement).value),
-        debounceTime(500),
-        distinctUntilChanged()).subscribe((searchItem)=>{
-          this.catalogService.selectNames(searchItem).subscribe({
-            next:(names)=>{
-              if(searchItem){
-                this.suggestedSubj.next(names);
-                this.cd.detectChanges();
-              } else {
-                this.suggestedSubj.next([]);
+      this.subscriptions.push( 
+        fromEvent (this.inputSearch.nativeElement,"input").pipe(
+          map((response: Event)=> (response.target as HTMLInputElement).value),
+          debounceTime(500),
+          distinctUntilChanged()).subscribe((searchItem)=>{
+            this.catalogService.selectNames(searchItem).subscribe({
+              next:(names)=>{
+                if(searchItem){
+                  this.suggestedSubj.next(names);
+                  this.cd.detectChanges();
+                } else {
+                  this.suggestedSubj.next([]);
+                }
+                
+              },
+              error:(error)=>{
+                console.log('Error of getting selected names',error);
               }
-              
-            },
-            error:(error)=>{
-              console.log('Error of getting selected names',error);
-            }
           })
         })
-    }    
-  
+      )
+    }  
   }
 
   async loadImageFile(url:string): Promise<string> {
@@ -176,21 +178,25 @@ export class StoreComponent implements AfterViewInit{
 
   search(){
     this.clearUpdate();
-    this.sneakers$.pipe(take(1)).subscribe({
-      next:()=>{
-        if(this.inputSearch.nativeElement.value){
-          this.store.dispatch(deleteAdminStore());
-          this.store.dispatch(getAdminStore(this.inputSearch.nativeElement.value));  
+    this.subscriptions.push( 
+      this.sneakers$.pipe(take(1)).subscribe({
+        next:()=>{
+          if(this.inputSearch.nativeElement.value){
+            this.store.dispatch(deleteAdminStore());
+            this.store.dispatch(getAdminStore(this.inputSearch.nativeElement.value));  
+          }
         }
-      }
-    }) 
+      }) 
+    )
   } 
 
   getCurrPage(item: Observable<number>) { 
     this.paginationCurrentPage = item;
-    this.paginationCurrentPage.subscribe(value=>{
-      this.currentPage.next(value);
-    });
+    this.subscriptions.push(
+      this.paginationCurrentPage.subscribe(value=>{
+        this.currentPage.next(value);
+      })
+    )
   }
 
   editSneakerCard(id: number){
@@ -203,27 +209,27 @@ export class StoreComponent implements AfterViewInit{
       element?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
 
-    this.catalogService.getSneakerById(id).subscribe(async(sneakers) => {
-      const pickedSneaker = sneakers.find(sneaker => sneaker.id === id);
-      this.editingSneaker = pickedSneaker as ISneakers;
-      const addPicArray = this.sneakersUpdate.get('addPic') as FormArray;
-      addPicArray.clear();
-      const mainPicture = await this.loadImageFile(`http://localhost:3000/${pickedSneaker?.main_picture}`);
-      pickedSneaker?.pictures?.map( async (value) => {
-        addPicArray.push(this.fb.control(await this.loadImageFile(`http://localhost:3000/${value}`)));
-        this.cd.detectChanges();
-      });
-
-      this.sneakersUpdate.patchValue({
-        name: pickedSneaker?.name,
-        description: pickedSneaker?.description,
-        color: pickedSneaker?.color_name,
-        price: pickedSneaker?.price,
-        mainPic:mainPicture,
-      })
-
-    })  
-    
+    this.subscriptions.push(
+      this.catalogService.getSneakerById(id).subscribe(async(sneakers) => {
+        const pickedSneaker = sneakers.find(sneaker => sneaker.id === id);
+        this.editingSneaker = pickedSneaker as ISneakers;
+        const addPicArray = this.sneakersUpdate.get('addPic') as FormArray;
+        addPicArray.clear();
+        const mainPicture = await this.loadImageFile(`http://localhost:3000/${pickedSneaker?.main_picture}`);
+        pickedSneaker?.pictures?.map( async (value) => {
+          addPicArray.push(this.fb.control(await this.loadImageFile(`http://localhost:3000/${value}`)));
+          this.cd.detectChanges();
+        });
+        
+        this.sneakersUpdate.patchValue({
+          name: pickedSneaker?.name,
+          description: pickedSneaker?.description,
+          color: pickedSneaker?.color_name,
+          price: pickedSneaker?.price,
+          mainPic:mainPicture,
+        })
+      })  
+    )
   }
 
   clearUpdate(){
@@ -281,6 +287,12 @@ export class StoreComponent implements AfterViewInit{
     console.log(this.editingSneaker);
     this.isEditingSizes = false;
     this.activeSizeSubj.next(null);
+  }
+
+  ngOnDestroy(): void {
+    console.log("store destroyed");
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  
   }
 
 }
