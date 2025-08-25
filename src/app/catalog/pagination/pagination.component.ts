@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Paginator } from '../model/paginator.model';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { ISneakers } from '../model/sneaker.model';
 
 
@@ -14,8 +14,9 @@ import { ISneakers } from '../model/sneaker.model';
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.scss'
 })
-export class PaginationComponent implements OnChanges, AfterViewInit{
-  
+export class PaginationComponent implements OnChanges, AfterViewInit,OnDestroy{
+  private paginationSubscription!: Subscription;
+
   @Input() inputPaginationSettings!:{
     array:Observable<ISneakers[]>,
     itemPerPage?:number,
@@ -35,7 +36,7 @@ export class PaginationComponent implements OnChanges, AfterViewInit{
   @Output() paginationCurrPage = new EventEmitter<Observable<number>>();
   
   ngOnChanges(): void {
-    this.inputPaginationSettings.array.subscribe(value=>{
+    this.paginationSubscription = this.inputPaginationSettings.array.subscribe(value=>{
       if(this.lengthSubject.getValue()>=value.length){
         this.lengthSubject.next(value.length);
         this.resetPagination();
@@ -113,4 +114,8 @@ export class PaginationComponent implements OnChanges, AfterViewInit{
     return this.pagination.getValue().itemPerPage;
   }
   
+  ngOnDestroy(): void {
+    if(this.paginationSubscription)
+      this.paginationSubscription.unsubscribe();
+  }
 }
