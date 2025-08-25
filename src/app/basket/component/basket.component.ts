@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { ISneakers } from 'app/catalog/model/sneaker.model';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -27,7 +27,9 @@ import { BasketService } from '../services/basket.service';
   templateUrl: './basket.component.html',
   styleUrl: './basket.component.scss'
 })
-export class BasketComponent {
+export class BasketComponent implements OnDestroy{
+  private subscriptions: Subscription[] = [];
+
   showMessageSbj = new BehaviorSubject<boolean> (false);
   showMessage$:Observable<boolean> = this.showMessageSbj.asObservable();
 
@@ -88,28 +90,29 @@ export class BasketComponent {
   totalBasketCurr:number = 0;
   constructor(private store: Store, public fb: FormBuilder, private basketService: BasketService){
     this.store.dispatch(getBasket());
-    this.basket$.subscribe({
-      next:(basket)=>{
-        this.totalBasketCurr = 0;
-        basket.map(sneaker => {
-          const checkVal = sneaker.sizes?.find(obj=> obj.size == sneaker.size)?.count as number;
-          if(checkVal < (sneaker.count as number)){
-            if(checkVal == 0){
-              this.errorMassage.push('There is no item on storage');
+    this.subscriptions.push(
+      this.basket$.subscribe({
+        next:(basket)=>{
+          this.totalBasketCurr = 0;
+          basket.map(sneaker => {
+            const checkVal = sneaker.sizes?.find(obj=> obj.size == sneaker.size)?.count as number;
+            if(checkVal < (sneaker.count as number)){
+              if(checkVal == 0){
+                this.errorMassage.push('There is no item on storage');
+              } else {
+                this.errorMassage.push('There isn\'t that much item on storage');
+              }
             } else {
-              this.errorMassage.push('There isn\'t that much item on storage');
+              this.errorMassage.push(null);
             }
-          } else {
-            this.errorMassage.push(null);
-          }
-          this.addToCounts(sneaker.count as number);
-          const subtotal = Number(sneaker.price) * Number(sneaker.count);
-          this.totalBasketCurr = Math.round((this.totalBasketCurr + subtotal) * 100) / 100;
-        });
-        this.basketSubj.next(basket);
-        console.log(basket);
-      }
-    })
+            this.addToCounts(sneaker.count as number);
+            const subtotal = Number(sneaker.price) * Number(sneaker.count);
+            this.totalBasketCurr = Math.round((this.totalBasketCurr + subtotal) * 100) / 100;
+          });
+          this.basketSubj.next(basket);
+        }
+      })
+    )
   }
 
   addToCounts(value:number){
@@ -159,19 +162,21 @@ export class BasketComponent {
   }
 
   purchase () {
-    this.basketService.buyItems(this.basketSubj.getValue()).subscribe({
-      next:(value)=>{
-        console.log('All done!', value);
-        this.basketSubj.getValue().forEach((value)=>{
-          this.store.dispatch(deleteBasketItemSuccess({id:value.id,size:value.size as number}));
-        })
-        this.triggerSuccessMessage();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      },
-      error:(error)=>{
-        console.log('Can not buy items', error);
-      }
-    });
+    this.subscriptions.push(
+      this.basketService.buyItems(this.basketSubj.getValue()).subscribe({
+        next:(value)=>{
+          console.log('All done!', value);
+          this.basketSubj.getValue().forEach((value)=>{
+            this.store.dispatch(deleteBasketItemSuccess({id:value.id,size:value.size as number}));
+          })
+          this.triggerSuccessMessage();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        error:(error)=>{
+          console.log('Can not buy items', error);
+        }
+      })
+    )
   }
 
   triggerSuccessMessage() {
@@ -179,5 +184,13 @@ export class BasketComponent {
     setTimeout(() => {
       this.showMessageSbj.next(false);
     }, 1000); 
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => {
+      if(sub) {
+        sub.unsubscribe();
+      }
+    })
   }
 }
