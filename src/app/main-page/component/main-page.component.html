@@ -1,20 +1,15 @@
 <section class="main-section">
-    
+    <h2 class="lined-title">MOST POPULAR MODELS</h2>
     <div class="popular">
         <app-popular [customConfig]="slideConfig"></app-popular>
     </div>
     
-
-    <div class="new-model-advertising">
-
-        <div class="first-ad">
-            <img src="assets\travis-scott-jordan-1-low-medium-olive.jpg" alt="travis scott air jordan 1 low">
-            <h4>The Air Jordan 1 Low “Medium Olive”</h4>
-        </div>
-
-        <div class="second-ad">
-            <img src="assets\nike-what-the-duck-dunk.jpg" alt="'What The Duck' Nike Dunk">
-            <h4>“What The Duck” Nike Dunk</h4>
+    <h2 class="lined-title">NEW MODELS</h2>
+    <div class="new-model-advertising" *ngIf="newAddedSneaker$|async as sneakers">
+        
+        <div class="adc-new-sneaker" *ngFor="let sneaker of sneakers">
+            <img [src]="'http://localhost:3000/' + sneaker.main_picture" [alt]="sneaker.name">
+            <h4>{{sneaker.name}}, {{sneaker.color_name}}</h4>
         </div>
 
     </div>
