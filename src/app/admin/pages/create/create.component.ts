@@ -111,7 +111,8 @@ export class CreateComponent implements OnDestroy{
   }
 
   ngOnDestroy(): void {
-    console.log('destroyed create');
-    this.createSubscription.unsubscribe();
+
+    if(this.createSubscription)
+      this.createSubscription.unsubscribe();
   }
 }

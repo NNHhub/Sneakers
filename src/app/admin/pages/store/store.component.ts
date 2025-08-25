@@ -290,9 +290,11 @@ export class StoreComponent implements AfterViewInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-    console.log("store destroyed");
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-  
+
+    this.subscriptions.forEach((sub) => {
+      if(sub)
+        sub.unsubscribe();
+    })
   }
 
 }

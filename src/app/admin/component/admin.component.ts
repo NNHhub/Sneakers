@@ -22,7 +22,7 @@ export class AdminComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('admin destroyed');
+
      if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
