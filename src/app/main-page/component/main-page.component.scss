@@ -8,38 +8,47 @@
     padding: 20px;
 }
 
+.lined-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 1.5em;
+}
+
+.lined-title::before,
+.lined-title::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(to left, transparent, #ccc);
+  margin: 0 10px;
+}
+
+.lined-title::after {
+  background: linear-gradient(to right, transparent, #ccc);
+}
+
 .popular {
     min-width: 90%;
+    margin-bottom: 50px;
 }
 
 .new-model-advertising{
     display:grid;
-    grid-template-areas:
-    "first second";
-    gap:40px;
-    grid-template-columns: 1fr 1fr;
-    margin-top: 50px;
+    gap:20px;
+    grid-template-columns: 1fr 1fr 1fr;
     padding: 10px;
 }
 
-.first-ad{
-    grid-area: first;
-    text-align: center;
-    border: 2px solid black;
+.adc-new-sneaker{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.first-ad img{
+.adc-new-sneaker img{
     width: 100%;
     height: 100%; 
-}
-
-.second-ad{
-    grid-area: second;
-    text-align: center;
-    border: 2px solid black;
-}
-
-.second-ad img{
-    width: 100%;
-    height: 100%;
 }

@@ -7,7 +7,7 @@ import { ProfileSecurity } from '../models/profile-security';
   providedIn: 'root'
 })
 export class ProfileService {
-  private API_URL = 'http://localhost:3000/api';
+  private API_URL = 'http://localhost:3000/user';
   constructor(private http: HttpClient) {}
 
   getProfileData() {
