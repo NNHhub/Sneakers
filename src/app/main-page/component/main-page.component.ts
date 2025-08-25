@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { PopularComponent } from "../../popular/component/popular.component";
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { ISneakers } from 'app/catalog/model/sneaker.model';
 import { MainPageService } from '../services/main-page.service';
 
@@ -19,7 +19,8 @@ import { MainPageService } from '../services/main-page.service';
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss'
 })
-export class MainPageComponent {
+export class MainPageComponent implements OnDestroy{
+  private mainPageSubscription: Subscription;
   newAddedSneakerSbj:BehaviorSubject<ISneakers[]> = new BehaviorSubject<ISneakers[]>([]);
   newAddedSneaker$: Observable<ISneakers[]> = this.newAddedSneakerSbj.asObservable();
 
@@ -38,7 +39,7 @@ export class MainPageComponent {
   };
   
   constructor(private mainPageService:MainPageService){
-    this.mainPageService.getNewAddedSneakers().subscribe({
+    this.mainPageSubscription = this.mainPageService.getNewAddedSneakers().subscribe({
       next:(value)=> {
         this.newAddedSneakerSbj.next(value);
       },
@@ -48,4 +49,8 @@ export class MainPageComponent {
     });
   }
 
+  ngOnDestroy(): void {
+    if(this.mainPageSubscription)
+      this.mainPageSubscription.unsubscribe();
+  }
 }
