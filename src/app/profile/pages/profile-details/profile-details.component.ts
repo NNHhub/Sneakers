@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -6,7 +6,7 @@ import { ProfileService } from 'app/profile/services/profile.service';
 import { Store } from '@ngrx/store';
 import { ProfileStoreSelector } from 'app/store/selectors/profile.selector';
 import { changeProfile, getProfile } from 'app/store/actions/profile.action';
-import { BehaviorSubject,Observable,take } from 'rxjs';
+import { BehaviorSubject,Observable,Subscription,take } from 'rxjs';
 import { IProfile } from 'app/profile/models/profile.model';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -27,7 +27,9 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
   templateUrl: './profile-details.component.html',
   styleUrl: './profile-details.component.scss'
 })
-export class ProfileDetailsComponent {
+export class ProfileDetailsComponent implements OnDestroy{
+  private subscriptions: Subscription[] = [];
+
   profileData: BehaviorSubject<IProfile | null> = new BehaviorSubject<IProfile|null>(null);
   profile$:Observable<IProfile|null> = this.profileData.asObservable();
   profileForm:FormGroup = new FormGroup({
@@ -47,6 +49,7 @@ export class ProfileDetailsComponent {
     public fb:FormBuilder,
     private profileService: ProfileService,
     private store: Store){
+      this.subscriptions.push(
       this.store.select(ProfileStoreSelector).pipe(take(2)).subscribe(data=>{
         if(!data){
           this.store.dispatch(getProfile());
@@ -60,14 +63,18 @@ export class ProfileDetailsComponent {
             email:[data.email, [Validators.required,Validators.pattern(/^[\w\d_]+@[\w\d_]+\.\w{2,7}$/)]],
           });
 
-          this.profileForm.valueChanges.subscribe({
-            next:()=>{
-              this.isProfileDataChanged = true
-            }
-          });
-
+          
         }        
-      });
+      })
+    )
+
+    this.subscriptions.push(
+      this.profileForm.valueChanges.subscribe({
+        next:()=>{
+          this.isProfileDataChanged = true
+        }
+      })
+    )
   }
 
   get profile(){
@@ -88,14 +95,16 @@ export class ProfileDetailsComponent {
 
     if(this.isProfileDataChanged){
       this.store.dispatch(changeProfile({profile:this.profile}));
-      this.profileService.updateProfile(this.profile).subscribe({
-        next:()=>{
-          console.log('Profile changed seccessfuly!');
-        },
-        error:(error)=>{
-          console.log('Failed to change profile', error);
-        }
-      });
+      this.subscriptions.push(
+        this.profileService.updateProfile(this.profile).subscribe({
+          next:()=>{
+            console.log('Profile changed seccessfuly!');
+          },
+          error:(error)=>{
+            console.log('Failed to change profile', error);
+          }
+        })
+      )
     }
     this.isProfileDataChanged = false;
   }
@@ -108,14 +117,17 @@ export class ProfileDetailsComponent {
     this.isEditingLastName = false;
     if(this.isProfileDataChanged){
       this.store.dispatch(changeProfile({profile:this.profile}));
-      this.profileService.updateProfile(this.profile).subscribe({
-        next:()=>{
-          console.log('Profile changed seccessfuly!');
-        },
-        error:(error)=>{
-          console.log('Failed to change profile', error);
-        }
-      });
+        this.subscriptions.push(
+          this.profileService.updateProfile(this.profile).subscribe({
+          next:()=>{
+            console.log('Profile changed seccessfuly!');
+          },
+          error:(error)=>{
+            console.log('Failed to change profile', error);
+          }
+        })
+      )
+      
     }
     this.isProfileDataChanged = false;
   }
@@ -131,14 +143,17 @@ export class ProfileDetailsComponent {
       
       this.store.dispatch(changeProfile({profile:this.profile}));
 
-      this.profileService.updateProfile(this.profile).subscribe({
-        next:()=>{
-          console.log('Profile changed seccessfuly!');
-        },
-        error:(error)=>{
-          console.log('Failed to change profile', error);
-        }
-      });
+      this.subscriptions.push(
+        this.profileService.updateProfile(this.profile).subscribe({
+          next:()=>{
+            console.log('Profile changed seccessfuly!');
+          },
+          error:(error)=>{
+            console.log('Failed to change profile', error);
+          }
+        })
+      )
+      
     }
     
     this.isProfileDataChanged = false;
@@ -153,14 +168,16 @@ export class ProfileDetailsComponent {
 
     if(this.isProfileDataChanged){
       this.store.dispatch(changeProfile({ profile:this.profile }));
-      this.profileService.updateProfile(this.profile).subscribe({
-        next:()=>{
-          console.log('Profile changed seccessfuly!');
-        },
-        error:(error)=>{
-          console.log('Failed to change profile', error);
-        }
-      });
+      this.subscriptions.push(
+        this.profileService.updateProfile(this.profile).subscribe({
+          next:()=>{
+            console.log('Profile changed seccessfuly!');
+          },
+          error:(error)=>{
+            console.log('Failed to change profile', error);
+          }
+        })
+      ) 
     }
 
     this.isProfileDataChanged = false;
@@ -173,5 +190,13 @@ export class ProfileDetailsComponent {
       return `${match[1]} (${match[2]}) ${match[3]}-${match[4]}`;
     }
     return value;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach( (sub) => {
+      if(sub) {
+        sub.unsubscribe();
+      }
+    })
   }
 }
