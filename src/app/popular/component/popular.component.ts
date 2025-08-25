@@ -1,5 +1,5 @@
-import { AfterViewChecked, Component, Input, OnChanges, Renderer2 } from '@angular/core';
-import { Observable } from 'rxjs';
+import { AfterViewChecked, Component, Input, OnChanges, OnDestroy, Renderer2 } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { ISneakers } from 'app/catalog/model/sneaker.model';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { CommonModule } from '@angular/common';
@@ -19,7 +19,8 @@ import { RouterModule } from '@angular/router';
   templateUrl: './popular.component.html',
   styleUrl: './popular.component.scss'
 })
-export class PopularComponent implements OnChanges, AfterViewChecked{
+export class PopularComponent implements OnChanges, AfterViewChecked, OnDestroy{
+  private popularSubscription: Subscription;
   shownItems : boolean = false;
   @Input() customConfig !: {
     "slidesToShow" ?: number, 
@@ -39,7 +40,7 @@ export class PopularComponent implements OnChanges, AfterViewChecked{
 
   constructor(private store: Store, private render: Renderer2){
     this.store.dispatch(getPopularList());
-    this.popular$.subscribe({
+    this.popularSubscription = this.popular$.subscribe({
       next:(value)=>{
         if(value.length){
           this.shownItems = true;
@@ -73,4 +74,8 @@ export class PopularComponent implements OnChanges, AfterViewChecked{
     }
   }
 
+  ngOnDestroy(): void {
+    if(this.popularSubscription)
+      this.popularSubscription.unsubscribe();
+  }
 }
