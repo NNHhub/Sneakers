@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ISneakers } from 'app/catalog/model/sneaker.model';
 import { CatalogService } from 'app/catalog/services/catalog.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { CarouselComponent } from "../../carousel/carousel.component";
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -18,7 +18,11 @@ import { basketSelector } from 'app/store/selectors/basket.selector';
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss'
 })
-export class DetailsComponent implements AfterViewInit{
+export class DetailsComponent implements AfterViewInit, OnDestroy{
+  private subscriptions: Subscription[] = [];
+
+  isAuth:string|null = localStorage.getItem('token');
+
   sneakerCount = new FormControl(1);
   hoveredItem: string = '';
   sneaksId!:number;
@@ -51,44 +55,56 @@ export class DetailsComponent implements AfterViewInit{
     private catalogService:CatalogService, 
     private router:Router,
     private store:Store){
-      this.basket$.subscribe({
-        next:(value) => {
-          this.basketSubj.next(value);
-        },
-        error:(error) => {
-          console.log('Something went wrong, when trying to load basket', error);
-        }
-      })
+      
+      if(this.isAuth) {
+        this.subscriptions.push (
+          this.basket$.subscribe({
+            next:(value) => {
+              this.basketSubj.next(value);
+            },
+            error:(error) => {
+              console.log('Something went wrong, when trying to load basket', error);
+            }
+          })
+        )
+      }  
     }
 
   ngAfterViewInit(): void {
-    this.route.params.subscribe(params => {
-      this.sneaksId = parseInt(params['id']);
-      this.catalogService.getSneakerById(this.sneaksId).subscribe({
-        next:(value)=>{
-          const sneakers = value.find(sneaker=>sneaker.id === this.sneaksId);
-          this.hoveredItem = sneakers?.main_picture as string;
-          sneakers?.pictures?.unshift(sneakers.main_picture);
-          this.activatedPictureSubj.next(sneakers as ISneakers);
-          this.activeIndex = value.indexOf(sneakers as ISneakers);
-          this.sneakersSubj.next(value);
-        },
-        error:(error)=>{
-          console.log('Something went wrong',error);
+    this.subscriptions.push(
+      this.route.params.subscribe(params => {
+        this.sneaksId = parseInt(params['id']);
+        this.subscriptions.push(
+          this.catalogService.getSneakerById(this.sneaksId).subscribe({
+            next:(value)=>{
+              const sneakers = value.find(sneaker=>sneaker.id === this.sneaksId);
+              this.hoveredItem = sneakers?.main_picture as string;
+              sneakers?.pictures?.unshift(sneakers.main_picture);
+              this.activatedPictureSubj.next(sneakers as ISneakers);
+              this.activeIndex = value.indexOf(sneakers as ISneakers);
+              this.sneakersSubj.next(value);
+            },
+            error:(error)=>{
+              console.log('Something went wrong',error);
+            }
+          })
+        )
+      })
+    )
+
+    this.subscriptions.push(
+      this.activeSize$.subscribe({ 
+        next:(size)=>{
+          if(size){
+            const sizeCount = (this.sneakersSubj.getValue()  as ISneakers[])[this.activeIndex].sizes?.find((value) => value.size == size)?.count;
+            this.activeSizeCountSubj.next(sizeCount as number);  
+          }
         }
       })
-    });
+    )
 
-    this.activeSize$.subscribe({ 
-      next:(size)=>{
-        if(size){
-          const sizeCount = (this.sneakersSubj.getValue()  as ISneakers[])[this.activeIndex].sizes?.find((value) => value.size == size)?.count;
-          this.activeSizeCountSubj.next(sizeCount as number);  
-        }
-      }
-    })
-
-    this.store.dispatch(getBasket());
+    if(this.isAuth)
+      this.store.dispatch(getBasket());
   }
   
   changeColor(id:number){
@@ -97,7 +113,6 @@ export class DetailsComponent implements AfterViewInit{
     this.activeSizeSubj.next(null);
     this.activeSizeCountSubj.next(null);
     this.sneakersSubj.next(null);
-    console.log(this.activeIndex);
   }
 
   handleItemHovered(item: string) { 
@@ -126,12 +141,11 @@ export class DetailsComponent implements AfterViewInit{
   }
 
   saveToBasket(item:ISneakers){
-    const auth = localStorage.getItem('token');
+    
     const basketExist = (this.basketSubj.getValue() as ISneakers[]).find(sneaker => (sneaker.id == this.sneaksId && sneaker.size == this.activeSizeSubj.getValue()));
     let count = this.sneakerCount.value as number;
     const countCheck = basketExist?.sizes?.find(sneak => sneak.size == this.activeSizeSubj.getValue())?.count as number;
-    if(auth){
-
+    if(this.isAuth){
       if(basketExist){
         if(countCheck < (basketExist.count as number) + count){
           count = countCheck;
@@ -160,4 +174,11 @@ export class DetailsComponent implements AfterViewInit{
     this.showFailureMessageSbj.next(false);
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach( (sub) => {
+      if (sub) {
+        sub.unsubscribe();
+      }
+    })
+  }
 }
