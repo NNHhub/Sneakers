@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterModule } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 @Component({
@@ -21,7 +21,9 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit, OnDestroy{
+  private subscriptions: Subscription[] = [];
+
   public regForm!: FormGroup;
   buttonLock = false;
   errorPost = new BehaviorSubject<string>('');
@@ -65,14 +67,16 @@ export class SignupComponent {
       ],
     });
 
-    this.regForm.valueChanges.subscribe({
-      next: () => {
-        if (this.errorPost.getValue()) {
-          this.errorPost.next('');
-          this.buttonClicked = true;
-        }
-      },
-    });
+    this.subscriptions.push(
+      this.regForm.valueChanges.subscribe({
+        next: () => {
+          if (this.errorPost.getValue()) {
+            this.errorPost.next('');
+            this.buttonClicked = true;
+          }
+        },
+      })
+    )
   }
 
   applyMask(value: string): string {
@@ -93,18 +97,29 @@ export class SignupComponent {
       password:this.regForm.controls['password'].value,
       phone: this.applyMask(this.regForm.controls['phone'].value)
     }
-    this.http.post('http://localhost:3000/api/register', body).subscribe({
-      next:(request)=>{
-        console.log('Autorizated seccesseful', request);
-        this.router.navigate(['/'])
-      },
-      error:(error)=>{
-        console.log('Autorization error',error)
-      }
-    })
+
+    this.subscriptions.push(
+      this.http.post('http://localhost:3000/api/register', body).subscribe({
+        next:(request)=>{
+          console.log('Autorizated seccesseful', request);
+          this.router.navigate(['/'])
+        },
+        error:(error)=>{
+          console.log('Autorization error',error)
+        }
+      })
+    )
+    
     this.regForm.controls['password'].reset();
     setTimeout(() => {
       this.buttonLock = false;
     }, 2000);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach( (sub) => {
+      if(sub)
+        sub.unsubscribe();
+    })
   }
 }
