@@ -67,7 +67,7 @@ export class SigninComponent implements OnInit {
 
   login() {
     this.buttonLock = true;
-    this.http.post(`http://localhost:3000/api/login`, { email:this.loginForm.controls['login'].value, password:this.loginForm.controls['password'].value }).subscribe({
+    this.http.post(`http://localhost:3000/user/login`, { email:this.loginForm.controls['login'].value, password:this.loginForm.controls['password'].value }).subscribe({
       next:(request)=>{
         console.log('Autorizated seccesseful');
         localStorage.setItem('token',(request as logInterface).token);
