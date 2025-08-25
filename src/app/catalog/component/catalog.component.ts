@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, fromEvent, map, Observable, take} from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, fromEvent, map, Observable, Subscription, take} from 'rxjs';
 import { Store } from '@ngrx/store';
 import { CatalogStoreSelector} from 'app/store/selectors/catalog.selector';
 import { deleteCatalog, getCatalog, searchInCatalog } from 'app/store/actions/catalog.action';
@@ -27,7 +27,9 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './catalog.component.html',
   styleUrl: './catalog.component.scss'
 })
-export class CatalogComponent implements AfterViewInit{
+export class CatalogComponent implements AfterViewInit, OnDestroy{
+  private subscriptions: Subscription[] = [];
+
   basketId$:Observable<number[]> = this.store.select(basketIdSelector);
   selected:string ='';
   selectedValue:string ='';
@@ -64,11 +66,13 @@ export class CatalogComponent implements AfterViewInit{
         return [];
     }));
 
-    this.sneakers$.pipe(take(1)).subscribe(value=>{
-      if(value.length===0){
-        this.store.dispatch(getCatalog());
-      }   
-    })
+    this.subscriptions.push( 
+      this.sneakers$.pipe(take(1)).subscribe(value=>{
+        if(value.length===0){
+          this.store.dispatch(getCatalog());
+        }   
+      })
+    )
 
     if(localStorage.getItem('token')){
       this.store.dispatch(getBasket());
@@ -78,6 +82,7 @@ export class CatalogComponent implements AfterViewInit{
 
   ngAfterViewInit(): void {
     if (this.inputSearch) {
+      this.subscriptions.push(
       fromEvent(this.inputSearch.nativeElement,"input").pipe(
         map((response: Event)=> (response.target as HTMLInputElement).value),
         debounceTime(1000),
@@ -90,6 +95,7 @@ export class CatalogComponent implements AfterViewInit{
             this.store.dispatch(getCatalog());
           }
         })
+      )
     }    
 
     const select = document.querySelector('.sort-list') as HTMLInputElement;
@@ -114,9 +120,11 @@ export class CatalogComponent implements AfterViewInit{
 
   getCurrPage(item: Observable<number>) { 
     this.paginationCurrentPage = item;
-    this.paginationCurrentPage.subscribe(value=>{
-      this.currentPage.next(value);
-    });
+    this.subscriptions.push(
+      this.paginationCurrentPage.subscribe(value=>{
+        this.currentPage.next(value);
+      })
+    )
   }
 
   openSelect (){
@@ -132,6 +140,14 @@ export class CatalogComponent implements AfterViewInit{
     this.selected = '';
     this.store.dispatch(deleteCatalog());
     this.store.dispatch(getCatalog());
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach( (sub) => {
+      if(sub){
+        sub.unsubscribe();
+      }
+    })
   }
 
 }
