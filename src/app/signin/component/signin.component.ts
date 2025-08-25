@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -26,7 +26,8 @@ interface logInterface{
   styleUrl: './signin.component.scss'
 })
 
-export class SigninComponent implements OnInit {
+export class SigninComponent implements OnInit, OnDestroy{
+  private subscriptions: Subscription[] = [];
 
   public loginForm!: FormGroup;
   buttonLock = false;
@@ -55,33 +56,45 @@ export class SigninComponent implements OnInit {
         [Validators.required, Validators.pattern(/^[^\s]+(\s.*)?$/)],
       ],
     });
-    this.loginForm.valueChanges.subscribe({
-      next: () => {
-        if (this.errorPost.getValue()) {
-          this.errorPost.next('');
-          this.buttonClicked = true;
-        }
-      },
-    });
+
+    this.subscriptions.push(
+      this.loginForm.valueChanges.subscribe({
+        next: () => {
+          if (this.errorPost.getValue()) {
+            this.errorPost.next('');
+            this.buttonClicked = true;
+          }
+        },
+      })
+    )
   }
 
   login() {
     this.buttonLock = true;
-    this.http.post(`http://localhost:3000/user/login`, { email:this.loginForm.controls['login'].value, password:this.loginForm.controls['password'].value }).subscribe({
-      next:(request)=>{
-        console.log('Autorizated seccesseful');
-        localStorage.setItem('token',(request as logInterface).token);
-        this.store.dispatch(getProfile());
-        this.router.navigate(['/'])
-      },
-      error:(error)=>{
-        console.log('Autorization error',error)
-      }
-    })
+    this.subscriptions.push(
+      this.http.post(`http://localhost:3000/user/login`, { email:this.loginForm.controls['login'].value, password:this.loginForm.controls['password'].value }).subscribe({
+        next:(request)=>{
+          console.log('Autorizated seccesseful');
+          localStorage.setItem('token',(request as logInterface).token);
+          this.store.dispatch(getProfile());
+          this.router.navigate(['/'])
+        },
+        error:(error)=>{
+          console.log('Autorization error',error)
+        }
+      })
+    )
     this.loginForm.controls['password'].reset();
     
     setTimeout(() => {
       this.buttonLock = false;
     }, 2000);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach( (sub) => {
+      if(sub)
+        sub.unsubscribe();
+    })
   }
 }
